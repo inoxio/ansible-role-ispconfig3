@@ -1,0 +1,54 @@
+---
+- name: Uncomment -o syslog_name=postfix/submission
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o syslog_name=postfix/submission)$'
+    replace: '\1'
+
+- name: Uncomment -o smtpd_tls_security_level=encrypt
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o smtpd_tls_security_level=encrypt)$'
+    replace: '\1'
+
+- name: Uncomment -o smtpd_sasl_auth_enable=yes
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o smtpd_sasl_auth_enable=yes)$'
+    replace: '\1'
+
+- name: Uncomment and set smtpd_client_restrictions
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#.*-o smtpd_client_restrictions=\$mua_client_restrictions$'
+    replace: '  -o smtpd_client_restrictions=permit_sasl_authenticated,reject'
+
+# Smtps
+- name: Uncomment -o syslog_name=postfix/smtps
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o syslog_name=postfix/smtps)$'
+    replace: '\1'
+
+- name: Uncomment -o smtpd_tls_wrappermode=yes
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o smtpd_tls_wrappermode=yes)$'
+    replace: '\1'
+
+- name: Uncomment -o smtpd_sasl_auth_enable=yes
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(.*-o smtpd_sasl_auth_enable=yes)$'
+    replace: '\1'
+
+- name: Uncomment and set smtpd_client_restrictions
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#.*-o smtpd_client_restrictions=\$mua_client_restrictions$'
+    replace: '  -o smtpd_client_restrictions=permit_sasl_authenticated,reject'
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted

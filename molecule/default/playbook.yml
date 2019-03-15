@@ -1,0 +1,28 @@
+---
+- name: Converge
+  hosts: all
+  remote_user: root
+  become: true
+  roles:
+    - role: inoxio.ispconfig3
+      root_password: password123
+      become: true
+      mail:
+        admin_email: email@molecule-test.com
+        admin_password: password123
+        base_domain: molecule-test.com
+        mailing_list_name: Mailman
+      mariadb:
+        admin_password: password123
+      phpmyadmin:
+        admin_password: password123
+      roundcube:
+        admin_password: password123
+      pureftp:
+        land: DE
+        state: Sunny State
+        city: Hill Valley
+        company: Flux Compensator Inc.
+        department: Software
+        domain: ispconfig.molecule-test.com
+

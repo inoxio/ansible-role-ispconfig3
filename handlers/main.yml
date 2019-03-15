@@ -1,0 +1,13 @@
+---
+# handlers file for inoxio.ispconfig3
+
+# we don't use the mount module here because it overwrites the existing fstab entry
+- name: Remount root
+  command: mount -o remount /
+
+- name: Start quota
+  command: "{{ item }}"
+  with_items:
+    - quotacheck -avugm
+    - quotaon -avug
+  become: true

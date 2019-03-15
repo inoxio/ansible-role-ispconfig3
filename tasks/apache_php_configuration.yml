@@ -1,0 +1,169 @@
+---
+- name: Install required software for Apache
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - apache2
+      - apache2-doc
+      - apache2-utils
+      - libapache2-mod-php
+      - php{{ php_version }}
+      - php{{ php_version }}-common
+      - php{{ php_version }}-gd
+      - php{{ php_version }}-mysql
+      - php{{ php_version }}-imap
+
+- name: Set default admin user to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/admin-user
+    value: 'root'
+    vtype: string
+
+- name: Set default admin password to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/admin-pass
+    value: '{{ phpmyadmin.admin_password }}'
+    vtype: string
+
+- name: Set default webserver to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/reconfigure-websever
+    value: 'apache2'
+    vtype: multiselect
+
+- name: Install required software for Apache
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - phpmyadmin
+      - php{{ php_version }}-cli
+      - php{{ php_version }}-cgi
+      - libapache2-mod-fcgid
+      - apache2-suexec-pristine
+      - php-pear
+      - mcrypt
+      - imagemagick
+      - libruby
+      - libapache2-mod-python
+      - php{{ php_version }}-curl
+      - php{{ php_version }}-intl
+      - php{{ php_version }}-pspell
+      - php{{ php_version }}-recode
+      - php{{ php_version }}-sqlite3
+      - php{{ php_version }}-tidy
+      - php{{ php_version }}-xmlrpc
+      - php{{ php_version }}-xsl
+      - memcached
+      - php-memcache
+      - php-imagick
+      - php-gettext
+      - php{{ php_version }}-zip
+      - php{{ php_version }}-mbstring
+      - php-soap
+      - php{{ php_version }}-soap
+
+# ----------------Configure apache----------------
+- name: Enable apache modules
+  apache2_module:
+    state: present
+    name: '{{ item }}'
+  with_items:
+    - suexec
+    - rewrite
+    - ssl
+    - actions
+    - include
+    - cgi
+
+- name: Check if httpoxy.conf exists
+  stat:
+    path: "/etc/apache2/conf-available/httpoxy.conf"
+  register: httpoxy_result
+
+- name: Create httpoxy.conf
+  file:
+    path: "/etc/apache2/conf-available/httpoxy.conf"
+    state: touch
+  when: not httpoxy_result.stat.exists
+
+- name: Disable http_proxy header
+  lineinfile:
+    path: /etc/apache2/conf-available/httpoxy.conf
+    line: '<IfModule mod_headers.c>'
+  when: not httpoxy_result.stat.exists
+
+- name: Disable http_proxy header
+  lineinfile:
+    path: /etc/apache2/conf-available/httpoxy.conf
+    line: '    RequestHeader unset Proxy early'
+  when: not httpoxy_result.stat.exists
+
+- name: Disable http_proxy header
+  lineinfile:
+    path: /etc/apache2/conf-available/httpoxy.conf
+    line: '</IfModule>'
+  when: not httpoxy_result.stat.exists
+
+- name: Enable httpoxy config
+  command: 'a2enconf httpoxy'
+  when: not httpoxy_result.stat.exists
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted
+
+- name: Comment application/x-ruby rb
+  replace:
+    path: /etc/mime.types
+    regexp: '^(.*application/x-ruby.*rb)$'
+    replace: '#\1'
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted
+
+# ----------------Configure php----------------
+- name: Install packages for php opcode
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - php{{ php_version }}-opcache
+      - php-apcu
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted
+
+- name: Install php{{ php_version }}-fpm
+  apt:
+    name: php{{ php_version }}-fpm
+    state: present
+
+- name: Enable proxy_fcgi module
+  apache2_module:
+    state: present
+    name: '{{ item }}'
+  with_items:
+    - actions
+    - proxy_fcgi
+    - alias
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted

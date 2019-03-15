@@ -1,0 +1,17 @@
+---
+- name: Install bind DNS related packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - bind9
+      - dnsutils
+      - haveged
+
+- name: Enable and start haveged
+  systemd:
+    name: haveged
+    state: started
+    enabled: True

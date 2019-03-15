@@ -1,0 +1,39 @@
+---
+- name: Comment bind-address= 127.0.0.1
+  replace:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^(bind-address.*=.*127\.0\.0\.1)$'
+    replace: '#\1'
+
+- name: Delete anonymous MySQL server user for {{ ansible_nodename }}
+  mysql_user:
+    login_user: root
+    login_password: '{{ mariadb_password }}'
+    check_implicit_admin: yes
+    user: ""
+    host: "{{ item }}"
+    state: absent
+  with_items:
+    - ""
+    - "{{ ansible_nodename }}"
+    - "localhost"
+  tags: mariadb
+
+- name: Change root user password on first run
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_password }}"
+    check_implicit_admin: yes
+    name: root
+    password: "{{ mariadb_password }}"
+    priv: '*.*:ALL,GRANT'
+    host: "{{ item }}"
+  with_items:
+    - "{{ ansible_nodename }}"
+    - "127.0.0.1"
+    - "::1"
+    - "localhost"
+  tags: mariadb
+
+- name: Remove the MySQL test database
+  action: mysql_db login_user=root login_password="{{ mariadb_password }}" db=test state=absent

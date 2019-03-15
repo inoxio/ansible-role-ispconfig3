@@ -1,0 +1,43 @@
+---
+- name: Install vlogger
+  apt:
+    name: vlogger
+    state: present
+
+- name: Install webalizer
+  apt:
+    name: webalizer
+    state: present
+
+- name: Install awstats
+  apt:
+    name: awstats
+    state: present
+
+- name: Install geoip-database
+  apt:
+    name: geoip-database
+    state: present
+
+- name: Install libclass-dbi-mysql-perl
+  apt:
+    name: libclass-dbi-mysql-perl
+    state: present
+
+- name: Comment MAILTO=root
+  replace:
+    path: /etc/cron.d/awstats
+    regexp: '^(MAILTO=root)$'
+    replace: '#\1'
+
+- name: Comment update.sh
+  replace:
+    path: /etc/cron.d/awstats
+    regexp: '^(\*\/10 \* \* \* \* www-data \[ -x \/usr\/share\/awstats\/tools\/update\.sh ] && \/usr\/share\/awstats\/tools\/update\.sh)$'
+    replace: '#\1'
+
+- name: Comment buildstatic.sh
+  replace:
+    path: /etc/cron.d/awstats
+    regexp: '^(10 03 \* \* \* www-data \[ -x \/usr\/share\/awstats\/tools\/buildstatic\.sh ] && \/usr\/share\/awstats\/tools\/buildstatic\.sh)$'
+    replace: '#\1'

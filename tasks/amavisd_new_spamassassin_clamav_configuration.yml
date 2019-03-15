@@ -1,0 +1,70 @@
+---
+- name: Install Amavisd_spamassassin_clamav related packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - amavisd-new
+      - spamassassin
+      - clamav
+      - clamav-daemon
+      - unzip
+      - bzip2
+      - arj
+      - nomarch
+      - lzop
+      - cabextract
+      - apt-listchanges
+      - libnet-ldap-perl
+      - libauthen-sasl-perl
+      - clamav-docs
+      - daemon
+      - libio-string-perl
+      - libio-socket-ssl-perl
+      - libnet-ident-perl
+      - zip
+      - libnet-dns-perl
+      - postgrey
+      - patch
+
+- name: Stop spamassassin
+  service:
+    name: spamassassin
+    state: stopped
+
+- name: Free Ram from Spamassassin
+  apt:
+    name: spamassassin
+    state: absent
+
+- name: Start freshclam-daemon
+  service:
+    name: clamav-freshclam
+    state: started
+
+- name: Start clamav-daemon
+  service:
+    name: clamav-daemon
+    state: started
+# ignore these errors they come
+# ERROR: /var/log/clamav/freshclam.log is locked by another process
+# ERROR: Problem with internal logger (UpdateLogFile = /var/log/clamav/freshclam.log).
+
+- name: Download ispconfig patch
+  get_url:
+    url: https://git.ispconfig.org/ispconfig/ispconfig3/raw/stable-{{ ispconfig_patch }}/helper_scripts/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+    dest: /tmp
+
+
+- name: Apply isp config patch
+  patch:
+    src: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+    basedir: /usr/sbin
+    remote_src: yes
+
+- name: Delete Patch
+  file:
+    path: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+    state: absent

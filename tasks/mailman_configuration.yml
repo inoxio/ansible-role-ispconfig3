@@ -1,0 +1,103 @@
+---
+- name: Set default site languages to install mailman without questions
+  debconf:
+    name: mailman
+    question: mailman/site_languages
+    value: en
+    vtype: multiselect
+
+- name: Set default queue_files_present to install mailman without questions
+  debconf:
+    name: mailman
+    question: mailman/queue_files_present
+    value: abort installation
+    vtype: select
+
+- name: Set default used_languages to install mailman without questions
+  debconf:
+    name: mailman
+    question: mailman/used_languages
+    value: 'en'
+    vtype: string
+
+- name: Set default default_server_language to install mailman without questions
+  debconf:
+    name: mailman
+    question: mailman/default_server_language
+    value: en
+    vtype: select
+
+- name: Set default create_site_list to install mailman without questions
+  debconf:
+    name: mailman
+    question: mailman/create_site_list
+    value: ''
+    vtype: note
+
+- name: Install mailman
+  apt:
+    name: mailman
+    state: present
+    update_cache: yes
+
+- name: Search for mailing lists called mailman
+  command: 'list_lists | grep {{ mailing_list_name }} | cat'
+  register: mailing_list_exists
+  when: True
+
+- name: Create first mailing list if it does not exist already
+  command: 'newlist --quiet --urlhost=lists.{{ mail.base_domain }} {{ mailing_list_name }}
+            {{ mail.admin_email }} {{ mail.admin_password }}'
+  when: not mailing_list_exists.stdout
+
+- name: Add new aliases for mailman
+  lineinfile:
+    path: /etc/aliases
+    line: '{{ item }}'
+  with_items:
+    - '## mailman mailing list'
+    - 'mailman:              "|/var/lib/mailman/mail/mailman post mailman"'
+    - 'mailman-admin:        "|/var/lib/mailman/mail/mailman admin mailman"'
+    - 'mailman-bounces:      "|/var/lib/mailman/mail/mailman bounces mailman"'
+    - 'mailman-confirm:      "|/var/lib/mailman/mail/mailman confirm mailman"'
+    - 'mailman-join:         "|/var/lib/mailman/mail/mailman join mailman"'
+    - 'mailman-leave:        "|/var/lib/mailman/mail/mailman leave mailman"'
+    - 'mailman-owner:        "|/var/lib/mailman/mail/mailman owner mailman"'
+    - 'mailman-request:      "|/var/lib/mailman/mail/mailman request mailman"'
+    - 'mailman-subscribe:    "|/var/lib/mailman/mail/mailman subscribe mailman"'
+    - 'mailman-unsubscribe:  "|/var/lib/mailman/mail/mailman unsubscribe mailman"'
+
+- name: Newaliases
+  command: 'newaliases'
+  when: True # The newaliases is idempotent and can always be executed
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: Define the alias /cgi-bin/mailman/ for all Apache vhosts
+  file:
+    src: "/etc/mailman/apache.conf"
+    dest: "/etc/apache2/conf-available/mailman.conf"
+    state: link
+
+- name: Check if mailman.conf exists
+  stat:
+    path: "/etc/apache2/conf-available/mailman.conf"
+  register: mailman_result
+
+- name: Activate configuration
+  command: 'a2enconf mailman'
+  when: not mailman_result.stat.exists
+
+- name: restart apache2
+  service:
+    name: apache2
+    state: restarted
+
+- name: Start mailman
+  service:
+    name: mailman
+    state: started
+  become: false

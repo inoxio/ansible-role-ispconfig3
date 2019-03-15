@@ -1,0 +1,28 @@
+---
+galaxy_info:
+  role_name: ispconfig3
+  author: Michael Kunze, Martin Lesser, Karl-Erik Kley
+  description: Installs and customizes ISPConfig 3 on Ubuntu Bionic
+  company: Inoxio Quality Services GmbH
+
+  license: Apache 2.0
+
+  min_ansible_version: 2.6.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+
+  galaxy_tags:
+    - inoxio
+    - ubuntu
+    - bionic
+    - installation
+    - setup
+    - unattended
+    - automatic
+    - molecule
+    - custom
+    - customization
+    - ispconfig

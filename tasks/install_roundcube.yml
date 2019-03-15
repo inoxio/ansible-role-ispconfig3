@@ -1,0 +1,100 @@
+---
+- name: Set if the db should be configured with dbconfig-common
+  debconf:
+    name: roundcube-core
+    question: roundcube/dbconfig-install
+    value: true
+    vtype: boolean
+
+- name: Set roundcube database-type
+  debconf:
+    name: roundcube-core
+    question: roundcube/database-type
+    value: 'mysql'
+    vtype: multiselect
+
+- name: Set roundcube mysql-admin-password
+  debconf:
+    name: roundcube-core
+    question: roundcube/mysql/admin-pass
+    value: '{{ ispconfig.mysql_root_password }}'
+    vtype: password
+
+- name: Set roundcube database-name
+  debconf:
+    name: roundcube-core
+    question: roundcube/db/dbname
+    value: 'roundcube'
+    vtype: string
+
+- name: Set roundcube mysql-app-password
+  debconf:
+    name: roundcube-core
+    question: roundcube/mysql/app-pass
+    value: '{{ roundcube.admin_password }}'
+    vtype: password
+
+- name: Set roundcube database-app-password-confirm
+  debconf:
+    name: roundcube-core
+    question: roundcube/app-password-confirm
+    value: '{{ roundcube.admin_password }}'
+    vtype: password
+
+- name: Set roundcube host
+  debconf:
+    name: roundcube-core
+    question: roundcube/hosts
+    value: 'localhost'
+    vtype: string
+
+- name: Set roundcube password
+  debconf:
+    name: roundcube-core
+    question: roundcube/pass
+    value: '{{ roundcube.admin_password }}'
+    vtype: password
+
+- name: Confirm mysql password for roundcube
+  debconf:
+    name: roundcube-core
+    question: roundcube/mysql/app-pass-confirm
+    value: '{{ ispconfig.mysql_root_password }}'
+    vtype: password
+
+- name: Install required software for roundcube
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - roundcube
+      - roundcube-core
+      - roundcube-mysql
+      - roundcube-plugins
+      - javascript-common
+      - libjs-jquery-mousewheel
+      - php-net-sieve
+      - tinymce
+
+- name: add new alias roundcube
+  lineinfile:
+    path: /etc/apache2/conf-enabled/roundcube.conf
+    line: 'Alias /roundcube /var/lib/roundcube'
+
+- name: add new alias webmail
+  lineinfile:
+    path: /etc/apache2/conf-enabled/roundcube.conf
+    line: 'Alias /webmail /var/lib/roundcube'
+
+- name: Restart apache2
+  service:
+    name: apache2
+    state: restarted
+
+- name: Replace localhost entry in config.inc,php
+  replace:
+    path: /etc/roundcube/config.inc.php
+    regexp: "^config['default_host'] ="
+    replace: "config['default_host'] = 'localhost';"

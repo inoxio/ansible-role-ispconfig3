@@ -1,0 +1,7 @@
+---
+# vars file for inoxio.ispconfig3
+ispconfig_version: '3.1.13'
+ispconfig_patch: '3.1'
+ispconfig_patch_version: '2.11'
+php_version: '7.2'
+jailkit_version: '2.20'

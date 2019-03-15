@@ -1,0 +1,54 @@
+---
+- name: Install required software for jailkit
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - build-essential
+      - autoconf
+      - automake1.11
+      - libtool
+      - flex
+      - bison
+      - debhelper
+      - binutils
+
+- name: print jailkit version
+  debug:
+    msg: "http://olivier.sessink.nl/jailkit/jailkit-{{ jailkit_version }}.tar.gz"
+
+- name: Download and unpack jailkit
+  unarchive:
+    src: http://olivier.sessink.nl/jailkit/jailkit-{{ jailkit_version }}.tar.gz
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Write 5 to debian/compat
+  replace:
+    path: /tmp/jailkit-{{ jailkit_version }}/debian/compat
+    regexp: '^.*$'
+    replace: '5'
+
+- name: Check if Jailkit is already installed
+  stat:
+    path: /etc/jailkit
+  register: jailkit_installed
+
+- name: Build jailkit
+  command: ./debian/rules binary
+  args:
+    chdir: /tmp/jailkit-{{ jailkit_version }}
+  when: not jailkit_installed.stat.exists
+
+- name: Install jailkit
+  apt:
+    deb: /tmp/jailkit_{{ jailkit_version }}-1_amd64.deb
+  when: not jailkit_installed.stat.exists
+
+- name: Remove jailkit deb
+  file:
+    path: /tmp/jailkit_{{ jailkit_version }}-1_amd64.deb
+    state: absent
+  when: not jailkit_installed.stat.exists

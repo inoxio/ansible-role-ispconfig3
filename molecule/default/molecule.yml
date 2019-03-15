@@ -1,0 +1,38 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: instance
+    box: ubuntu/bionic64
+    instance_raw_config_args:
+      - "vm.hostname = 'web.my.net'"
+    memory: 4096
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: false
+scenario:
+  name: default
+  test_sequence:
+    # - lint
+    - destroy
+    # - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    # - side_effect
+    - verify
+    - destroy
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

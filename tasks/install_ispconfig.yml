@@ -1,0 +1,27 @@
+---
+- name: Download and unpack ispconfig
+  unarchive:
+    src: https://ispconfig.org/downloads/ISPConfig-{{ ispconfig_version }}.tar.gz
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: resolve autoinstall template on remote host
+  template:
+    src: "{{ role_path }}/autoinstall/autoinstall.ini.j2"
+    dest: /tmp/ispconfig3_install/install/autoinstall.ini
+
+- name: check if ISPConfig is already installed
+  stat:
+    path: /usr/local/ispconfig
+  register: ispconfig_installed
+
+- name: Start ISPConfig Installation
+  command: "php -q install.php --autoinstall=autoinstall.ini"
+  args:
+    chdir: /tmp/ispconfig3_install/install/
+  when: not ispconfig_installed.stat.exists
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted

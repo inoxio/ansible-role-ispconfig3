@@ -1,0 +1,47 @@
+---
+- name: Set default mailname to install postfix without questions
+  debconf:
+    name: postfix
+    question: postfix/mailname
+    value: '{{ mail.base_domain }}'
+    vtype: string
+
+- name: Set default mailer type to install postfix without questions
+  debconf:
+    name: postfix
+    question: postfix/main_mailer_type
+    value: 'Internet Site'
+    vtype: string
+
+- name: Install required packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - build-essential
+      - postfix
+      - postfix-mysql
+      - postfix-doc
+      - mariadb-client
+      - mariadb-server
+      - python-dev
+      - python-pip
+      - openssl
+      - getmail4
+      - rkhunter
+      - binutils
+      - dovecot-imapd
+      - dovecot-pop3d
+      - dovecot-mysql
+      - dovecot-sieve
+      - dovecot-lmtpd
+      - sudo
+      - python3-mysqldb
+      - python-mysqldb
+
+- name: Install pip
+  apt:
+    name: python-pip
+    state: present

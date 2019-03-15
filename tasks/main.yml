@@ -1,0 +1,73 @@
+---
+- name: Switch shell to bash
+  file:
+    src: /bin/bash
+    dest: /bin/sh
+    state: link
+
+- name: Stop AppArmor
+  service:
+    name: apparmor
+    state: stopped
+
+- name: Remove AppArmor
+  apt:
+    name: apparmor
+    state: absent
+
+- name: Synchronize the system clock (install ntp)
+  apt:
+    name: ntp
+    state: present
+
+- name: Uninstall sendmail
+  apt:
+    name: sendmail
+    state: absent
+
+# ----------------Install packages----------------
+- include_tasks: install_packages.yml
+
+# ----------------Configure Postfix----------------
+- include_tasks: postfix_configuration.yml
+
+# ----------------Configure Mariadb----------------
+- include_tasks: mariadb_configuration.yml
+
+# ----------------Install and configure php and apache----------------
+- include_tasks: apache_php_configuration.yml
+
+# ----------------Install and configure pureftp_quota----------------
+- include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
+
+# ----------------Install Let's encrypt----------------
+
+- name: Install certbot
+  apt:
+    name: certbot
+    state: present
+
+
+# ----------------Install and configure mailman----------------
+- include_tasks: mailman_configuration.yml
+
+#----------------Install and configure pureftp_quota----------------
+- include_tasks: quota_pureftp_configuration.yml
+
+#----------------Install and configure bind dns----------------
+- include_tasks: bind_dns_server.yml
+
+#----------------Install and configure bind dns----------------
+- include_tasks: install_vlogger_webalizer_awstats.yml
+
+#----------------Install and configure bind dns----------------
+- include_tasks: install_jailkit.yml
+
+#----------------Install and configure bind dns----------------
+- include_tasks: install_fail2ban_ufw.yml
+
+#----------------Install and configure roundcube----------------
+- include_tasks: install_roundcube.yml
+
+#----------------Install and configure ispconfig----------------
+- include_tasks: install_ispconfig.yml

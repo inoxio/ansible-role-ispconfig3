@@ -1,0 +1,81 @@
+---
+- name: Install quota related packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - pure-ftpd-common
+      - pure-ftpd-mysql
+      - quota
+      - quotatool
+      - python3
+      - python3-pip
+      - python-setuptools
+
+- name: Ensure python OpenSSL dependencies are installed.
+  pip:
+    name: pyOpenSSL
+    state: present
+
+- name: Edit pure-ftpd-commom file
+  lineinfile:
+    path: /etc/default/pure-ftpd-common
+    regexp: '^STANDALONE_OR_INETD='
+    line: 'STANDALONE_OR_INETD=standalone'
+
+- name: Edit pure-ftpd-commom file
+  lineinfile:
+    path: /etc/default/pure-ftpd-common
+    regexp: '^VIRTUALCHROOT='
+    line: 'VIRTUALCHROOT=true'
+
+- name: Allow FTP and TLS
+  copy:
+    dest: /etc/pure-ftpd/conf/TLS
+    content: 1
+
+- name: Create directory for ssl certificate
+  file:
+    path: /etc/ssl/private/
+    state: directory
+
+- name: Check if SSL certificate was created already
+  stat:
+    path: /etc/ssl/private/pure-ftpd.pem
+  register: certificate_exists
+
+- name: Generate SSL certificate
+  command: openssl req
+          -x509
+          -nodes
+          -days 7300
+          -newkey rsa:2048
+          -keyout /etc/ssl/private/pure-ftpd.pem
+          -out /etc/ssl/private/pure-ftpd.pem
+          -subj "/C={{ ispconfig.ssl_cert_country }}/ST={{ ispconfig.ssl_cert_state }}/\
+          L={{ ispconfig.ssl_cert_locality }}/O={{ ispconfig.ssl_cert_organisation }}/\
+          OU={{ ispconfig.ssl_cert_organisation_unit }}/CN={{ ispconfig.ssl_cert_common_name }}"
+  when: not certificate_exists.stat.exists
+
+- name: Change permission of ssl file
+  file:
+    path: /etc/ssl/private/pure-ftpd.pem
+    mode: u=rw,g=,o=
+
+- name: Restart pureFTP
+  service:
+    name: pure-ftpd-mysql
+    state: restarted
+
+- name: Edit fstab file
+  replace:
+    path: /etc/fstab
+    regexp: '(.*\/\s*ext4\s*)(\w*)(\s*[0,1]\s*[0,1])'
+    replace: '\1\2,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 \3'
+  notify:
+    - Remount root
+    - Start quota
+
+- meta: flush_handlers
