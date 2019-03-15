@@ -27,3 +27,6 @@ ispconfig_reconfigure_permissions_in_master_database: n
 ispconfig_reconfigure_services: yes
 ispconfig_create_new_ispconfig_ssl_cert: no
 ispconfig_reconfigure_crontab: yes
+
+quota_mounts:
+  - /
