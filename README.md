@@ -145,7 +145,8 @@ The following will explain how to setup everything and run the tests.
 These are the requirements you have to fulfill before starting Molecule. In the following it will be explained 
 how you can setup roles for testing. 
 
-#####Run Test
+Run Test
+------------
 
 Running tests is fairly easy, just go into your venv as seen in step 2 above and run: 
 
@@ -155,19 +156,22 @@ This will automatically setup your driver (Docker or Vagrant in most cases) and 
 such as idempotence tests or your own written tests which can test all kind of things.
 
 
-#####New Role
+New Role
+------------
 `Molecule init role -r new-role -d vagrant` 
 
 This will initialize a new Vagrant role with the name `new-role` and 
 it will contain the standard setup for Vagrant. As alternative you can set your driver to Docker or other 
 supported methods of virtualization. 
 
-#####Upgrade Molecule
+Upgrade Molecule
+------------
 Note: Molecule is relatively new so there will be updates, that is why it is recommended to run this from time to time.
 
 `pip install --upgrade Molecule`
 
-#####Example Molecule and Playbook
+Example Molecule and Playbook
+------------
 
 Here you are going to see an example how the `Molecule.yml` and the `Playbook.yml` is structured 
 for this test scenario.
