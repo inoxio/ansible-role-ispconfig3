@@ -111,6 +111,12 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `reconfigure_crontab`: Configures cronjob.
         * Default: `yes`
 
+Quota 
+------------
+The list `quota_mounts` in [defaults/main.yml](defaults/main.yml) contains all directories that will be edited in the fstab file to enable quota on
+them. If the list is empty quota will not be enabled. If the kernel on your machine does not contain the quota
+modules, you have to keep the list empty. This is the case for AWS machines that use the 
+[linux-aws kernel](https://bugs.launchpad.net/ubuntu/+source/linux-aws/+bug/1773172).
 
 
 Dependencies
