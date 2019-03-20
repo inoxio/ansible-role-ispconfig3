@@ -30,16 +30,19 @@ This happens to the ssl_cert part too, this will be used as the SSL cert is gene
     * `admin_email`: 
         Mail which will send/receive updates from Mailman.
     * `admin_password`: 
-        Password for Mailman admin.
+        (Optional) Password for Mailman admin. If no password is set a password will be generated and printed at 
+        the end of role execution.
     * `base_domain`: 
         Base domain for Mailman.
     * `mailing_list_name`:
         Sets the mailman List. It is recommended to set it as Mailman (see example playbook).
         * Default: `Mailman`
 * `phpmyadmin`: 
-    * `admin_password`: Password for Admin Login in PHPMyadmin. 
+    * `admin_password`: (Optional) Password for Admin Login in PHPMyadmin. If no password is set a password will be 
+    generated and printed at the end of role execution.
 * `roundcube`: 
-    * `admin_password`: Password for Admin Login in Roundcube. 
+    * `admin_password`: Password for Admin Login in Roundcube. If no password is set a generated password
+    will be created and printed at the end of role execution.
 * `ISPConfig`: This contains the most configurations for your ISPConfig setup. 
 Please have a look at the example provided by ISPConfig itself. 
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
@@ -53,7 +56,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `mysql_root_user`: Name of the root user. In most cases this will be just 'root'. If you customize your
     ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
         * Default: `root`
-    * `mysql_root_password`: Password of the root user, please choose a secure one. Even if your database isn't exposed.
+    * `mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
+    isn't exposed. If no password is set a password will be generated and printed at the end of role execution.
     * `mysql_database`: Database which will be initialized in MariaDB setup and used from ISPConfig. 
         * Default: `dbISPConfig`
     * `mysql_port`: Port which is used by MariaDB, it is also used for the database initialization.  
@@ -66,7 +70,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
         * Default: `8080`
     * `ISPConfig_use_ssl`:  Use SSL to connect to ISPConfig.
         * Default: `y`
-    * `ISPConfig_admin_password`: Password for the ISPConfig Admin Login.
+    * `ISPConfig_admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
+    generated and printed at the end of role execution.
     * `ssl_cert_country`: Your country. 
     * `ssl_cert_state`: Your state.
     * `ssl_cert_locality`: Your city.
@@ -75,13 +80,15 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `ssl_cert_common_name`: FQDN of your site.
     * `mysql_ISPConfig_user`: User which will be created inside the MySQL database.
         * Default: `ISPConfig`
-    * `mysql_ISPConfig_password`: Login for MySQL.
+    * `mysql_ISPConfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
+    printed at the end of role execution.
         
     * `join_multiserver_setup`: Joins multiple servers. 
         * Default: `n`
     * `mysql_master_hostname`: Location of the master MySQL database, for most cases 'localhost' is sufficient.
         * Default: `localhost`
-    * `mysql_master_root_password`: Password for the root user of the master data. 
+    * `mysql_master_root_password`: (Optional) Password for the root user of the master data. If no password is set a 
+    password will be generated and printed at the end of role execution.
     * `configure_mail`: Mailman setup for ISPConfig.
         * Default: `y`
     * `configure_jailkit`: Jailkit setup for ISPConfig.
