@@ -8,7 +8,7 @@
 - name: Delete anonymous MySQL server user for {{ ansible_nodename }}
   mysql_user:
     login_user: root
-    login_password: '{{ ispconfig.mysql_root_password }}'
+    login_password: '{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}'
     check_implicit_admin: yes
     user: ""
     host: "{{ item }}"
@@ -22,10 +22,10 @@
 - name: Change root user password on first run
   mysql_user:
     login_user: root
-    login_password: "{{ ispconfig.mysql_root_password }}"
+    login_password: "{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}"
     check_implicit_admin: yes
     name: root
-    password: "{{ ispconfig.mysql_root_password }}"
+    password: "{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}"
     priv: '*.*:ALL,GRANT'
     host: "{{ item }}"
   with_items:
@@ -36,4 +36,4 @@
   tags: mariadb
 
 - name: Remove the MySQL test database
-  action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password }}" db=test state=absent
+  action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}" db=test state=absent

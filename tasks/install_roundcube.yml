@@ -17,7 +17,7 @@
   debconf:
     name: roundcube-core
     question: roundcube/mysql/admin-pass
-    value: '{{ ispconfig.mysql_root_password }}'
+    value: '{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}'
     vtype: password
 
 - name: Set roundcube database-name
@@ -31,14 +31,14 @@
   debconf:
     name: roundcube-core
     question: roundcube/mysql/app-pass
-    value: '{{ roundcube.admin_password }}'
+    value: '{{ roundcube.admin_password if roundcube is defined else roundcube_admin_password }}'
     vtype: password
 
 - name: Set roundcube database-app-password-confirm
   debconf:
     name: roundcube-core
     question: roundcube/app-password-confirm
-    value: '{{ roundcube.admin_password }}'
+    value: '{{ roundcube.admin_password if roundcube is defined else roundcube_admin_password }}'
     vtype: password
 
 - name: Set roundcube host
@@ -52,14 +52,14 @@
   debconf:
     name: roundcube-core
     question: roundcube/pass
-    value: '{{ roundcube.admin_password }}'
+    value: '{{ roundcube.admin_password if roundcube is defined else roundcube_admin_password }}'
     vtype: password
 
 - name: Confirm mysql password for roundcube
   debconf:
     name: roundcube-core
     question: roundcube/mysql/app-pass-confirm
-    value: '{{ ispconfig.mysql_root_password }}'
+    value: '{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}'
     vtype: password
 
 - name: Install required software for roundcube
