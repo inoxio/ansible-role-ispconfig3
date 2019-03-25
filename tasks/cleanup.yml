@@ -1,0 +1,11 @@
+---
+- name: Check if debconf files are existing
+  stat:
+    path: /var/cache/debconf/passwords.dat
+  register: debconf_result
+
+- name: Remove old debconf entries
+  file:
+    path: /var/cache/debconf/passwords.dat
+    state: absent
+  when: debconf_result.stat.exists == True
