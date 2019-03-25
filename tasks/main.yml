@@ -77,7 +77,7 @@
 - include_tasks: mailman_configuration.yml
 
 #----------------Install and configure pureftp_quota----------------
-#- include_tasks: quota_pureftp_configuration.yml
+- include_tasks: quota_pureftp_configuration.yml
 
 #----------------Install and configure bind dns----------------
 - include_tasks: bind_dns_server.yml
