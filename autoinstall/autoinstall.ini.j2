@@ -9,7 +9,7 @@ mysql_database={{ ispconfig_mysql_database }}
 mysql_port={{ ispconfig_mysql_port }}
 mysql_charset={{ ispconfig_mysql_charset }}
 http_server={{ ispconfig_http_server }}
-ispconfig_port={{ ispconfig_ispconfig_port }}
+ispconfig_port={{ ispconfig_ispconfig_port | default(ispconfig.port) }}
 ispconfig_use_ssl={{ ispconfig_ispconfig_use_ssl }}
 ispconfig_admin_password={{ ispconfig.ispconfig_admin_password | default(ispconfig_admin_password) }}
 
@@ -20,6 +20,7 @@ ssl_cert_locality={{ ispconfig.ssl_cert_locality }}
 ssl_cert_organisation={{ ispconfig.ssl_cert_organisation  }}
 ssl_cert_organisation_unit={{ ispconfig.ssl_cert_organisation_unit }}
 ssl_cert_common_name={{ ispconfig.ssl_cert_common_name }}
+
 [expert]
 mysql_ispconfig_user={{ ispconfig.mysql_ispconfig_user }}
 mysql_ispconfig_password={{ ispconfig.mysql_ispconfig_password | default(ispconfig_mysql_ispconfig_password) }}
@@ -34,6 +35,7 @@ configure_nginx={{ ispconfig_configure_nginx }}
 configure_apache={{ ispconfig_configure_apache }}
 configure_firewall={{ ispconfig_configure_firewall }}
 install_ispconfig_web_interface={{ ispconfig_install_ispconfig_web_interface }}
+
 [update]
 do_backup={{ ispconfig_do_backup }}
 mysql_root_password={{ ispconfig_mysql_master_database }}
@@ -43,6 +45,6 @@ mysql_master_root_password={{ ispconfig.mysql_master_root_password | default(isp
 mysql_master_database={{ ispconfig_mysql_database }}
 reconfigure_permissions_in_master_database={{ ispconfig_reconfigure_permissions_in_master_database }}
 reconfigure_services={{ ispconfig_reconfigure_services }}
-ispconfig_port={{ ispconfig_ispconfig_port }}
+ispconfig_port={{ ispconfig_ispconfig_port  | default(ispconfig.port) }}
 create_new_ispconfig_ssl_cert={{ ispconfig_create_new_ispconfig_ssl_cert }}
 reconfigure_crontab={{ ispconfig_reconfigure_crontab }}
