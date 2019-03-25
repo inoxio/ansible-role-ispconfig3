@@ -1,0 +1,32 @@
+---
+
+- name: Remove unnecessary self-signed SSL files
+  file:
+    path: "/usr/local/ispconfig/interface/ssl/{{ item }}"
+    state: absent
+  with_items:
+    - ispserver.csr
+    - ispserver.key.secure
+    - ispserver.crt
+    - ispserver.key
+
+- name: Create symlinks to Let's Encrypt SSL files
+  file:
+    src: '/etc/letsencrypt/live/{{ item }}/fullchain.pem'
+    dest: '/usr/local/ispconfig/interface/ssl/ispserver.crt'
+    state: link
+  with_items: "{{ certbot.certs_domains }}"
+
+- name: Create symlinks to Let's Encrypt SSL files
+  file:
+    src: '/etc/letsencrypt/live/{{ item }}/privkey.pem'
+    dest: '/usr/local/ispconfig/interface/ssl/ispserver.key'
+    state: link
+  with_items: "{{ certbot.certs_domains }}"
+
+- name: Start services after cert has been generated
+  service:
+    name: "{{ item }}"
+    state: started
+  when: not letsencrypt_cert.stat.exists
+  with_items: "{{ certbot.create_standalone_stop_services }}"

@@ -28,5 +28,11 @@ ispconfig_reconfigure_services: yes
 ispconfig_create_new_ispconfig_ssl_cert: no
 ispconfig_reconfigure_crontab: yes
 
+certbot_dir: /opt/certbot
+certbot_create_command: >-
+  {{ certbot_dir }}/certbot-auto certonly --standalone --noninteractive --agree-tos
+  --email {{ cert_item.email | default(certbot.admin_email) }}
+  -d {{ cert_item  }}
+
 quota_mounts:
   - /

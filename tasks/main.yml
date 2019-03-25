@@ -50,45 +50,37 @@
     name: sendmail
     state: absent
 
-# ----------------Install packages----------------
+# ----------------Install packages----------------------------
 - include_tasks: install_packages.yml
 
-# ----------------Configure Postfix----------------
+# ----------------Configure Postfix----------------------------
 - include_tasks: postfix_configuration.yml
 
-# ----------------Configure Mariadb----------------
+# ----------------Configure Mariadb----------------------------
 - include_tasks: mariadb_configuration.yml
 
-# ----------------Install and configure php and apache----------------
+# ----------------Install and configure php and apache---------
 - include_tasks: apache_php_configuration.yml
 
-# ----------------Install and configure pureftp_quota----------------
+# ----------------Install and configure pureftp_quota----------
 - include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
 
-# ----------------Install Let's encrypt----------------
-
-- name: Install certbot
-  apt:
-    name: certbot
-    state: present
-
-
-# ----------------Install and configure mailman----------------
+# ----------------Install and configure mailman-----------------
 - include_tasks: mailman_configuration.yml
 
-#----------------Install and configure pureftp_quota----------------
+#----------------Install and configure pureftp_quota------------
 - include_tasks: quota_pureftp_configuration.yml
 
-#----------------Install and configure bind dns----------------
+#----------------Install and configure bind dns-----------------
 - include_tasks: bind_dns_server.yml
 
-#----------------Install and configure bind dns----------------
+#----------------Install vlogger webalizer awstats--------------
 - include_tasks: install_vlogger_webalizer_awstats.yml
 
-#----------------Install and configure bind dns----------------
+#----------------Install jailkit--------------------------------
 - include_tasks: install_jailkit.yml
 
-#----------------Install and configure bind dns----------------
+#----------------Install fail2ban ufw---------------------------
 - include_tasks: install_fail2ban_ufw.yml
 
 #----------------Install and configure roundcube----------------
@@ -96,6 +88,15 @@
 
 #----------------Install and configure ispconfig----------------
 - include_tasks: install_ispconfig.yml
+
+#----------------Create certificates----------------------------
+- include_tasks: create-cert-standalone.yml
+  with_items: "{{ certbot.certs_domains }}"
+  loop_control:
+    loop_var: cert_item
+
+#----------------Configure certificates-------------------------
+- include_tasks: configure_certificates.yml
 
 - name: Print all passwords
   debug:
@@ -111,4 +112,5 @@
                                                 | default(ispconfig_mysql_ispconfig_password) }}"
       - "ispconfig.mysql_master_root_password: {{ ispconfig.mysql_master_root_password
                                                   | default(ispconfig_mysql_master_root_password) }}"
+
 - include_tasks: cleanup.yml

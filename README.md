@@ -11,6 +11,10 @@ Requirements
 
 - Machine with Ubuntu 18.04
 
+Dependencies
+------------
+
+- geerlingguy.certbot
 
 Role Variables
 --------------
@@ -117,7 +121,12 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
         * Default: `no`
     * `reconfigure_crontab`: Configures cronjob.
         * Default: `yes`
-
+    * `certbot`:
+        * `admin_email`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+        * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+        * `install_from_source`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+        * `domain`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+        
 Quota 
 ------------
 The list `quota_mounts` in [defaults/main.yml](defaults/main.yml) contains all directories that will be edited in the fstab file to enable quota on
@@ -278,7 +287,11 @@ This shows an example how you could configure your playbook.
             ssl_cert_organisation: Your Conpany Inc
             ssl_cert_organisation_unit: Software
             ssl_cert_common_name: ispconfig.your-company.com
-             
+          certbot:
+            admin_email: certificate@your-company.de
+            create_standalone_stop_services: apache
+            install_from_source: yes
+            domain: subdomain.your-company.de
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
