@@ -74,7 +74,7 @@
     path: /etc/fstab
     regexp: '(.*\{{ item }}\s*ext4\s*)(\w*)(\s*[0,1]\s*[0,1])'
     replace: '\1\2,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 \3'
-  with_items: "{{ quota_mounts }}"
+  with_items: "{{ quota.mounts | default(quota_mounts) }}"
   notify:
     - Remount root
     - Start quota

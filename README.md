@@ -122,6 +122,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `reconfigure_crontab`: Configures cronjob.
         * Default: `yes`
     * `port`: Sets the port for ISPConfig Service.
+* `quota`: (Optional)
+    * `mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
 * `certbot`:
     * `admin_email`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
     * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
@@ -131,7 +133,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
 Quota 
 ------------
 The list `quota_mounts` in [defaults/main.yml](defaults/main.yml) contains all directories that will be edited in the fstab file to enable quota on
-them. If the list is empty quota will not be enabled. If the kernel on your machine does not contain the quota
+them. If the list is empty quota will not be enabled. You can overwrite this list by adding the quota variable in the playbook 
+(See section "Role Variables"). If the kernel on your machine does not contain the quota
 modules, you have to keep the list empty. This is the case for AWS machines that use the 
 [linux-aws kernel](https://bugs.launchpad.net/ubuntu/+source/linux-aws/+bug/1773172).
 
