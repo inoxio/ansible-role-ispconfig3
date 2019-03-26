@@ -121,11 +121,12 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
         * Default: `no`
     * `reconfigure_crontab`: Configures cronjob.
         * Default: `yes`
-    * `certbot`:
-        * `admin_email`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-        * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-        * `install_from_source`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-        * `domain`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+    * `port`: Sets the port for ISPConfig Service.
+* `certbot`:
+    * `admin_email`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+    * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+    * `install_from_source`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+    * `certs_domains`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
         
 Quota 
 ------------
