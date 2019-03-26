@@ -124,11 +124,11 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `port`: Sets the port for ISPConfig Service.
 * `quota`: (Optional)
     * `mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
-* `certbot`:
-    * `admin_email`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-    * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-    * `install_from_source`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-    * `certs_domains`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
+* `certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
+    * `admin_email`: Used for Let's Encrypt's CA authorization.
+    * `create_standalone_stop_services`: List of services that should be stopped while certbot creates certificates.
+    * `install_from_source`: Set this to true or yes if you want the certbot installation from source instead.
+    * `certs_domains`: A list of domains for which certificates will be created.
     * `staging`: (Optional) Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
     delay.  
