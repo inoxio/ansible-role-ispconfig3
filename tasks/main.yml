@@ -98,6 +98,8 @@
 #----------------Configure certificates-------------------------
 - include_tasks: configure_certificates.yml
 
+- include_tasks: cleanup.yml
+
 - name: Print all passwords
   debug:
     msg:
@@ -112,5 +114,3 @@
                                                 | default(ispconfig_mysql_ispconfig_password) }}"
       - "ispconfig.mysql_master_root_password: {{ ispconfig.mysql_master_root_password
                                                   | default(ispconfig_mysql_master_root_password) }}"
-
-- include_tasks: cleanup.yml
