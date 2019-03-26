@@ -129,7 +129,10 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `create_standalone_stop_services`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
     * `install_from_source`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
     * `certs_domains`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot).
-        
+    * `staging`: (Optional) Set this variable to true or yes to create test certificates. This is useful if you have to 
+    run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
+    delay.  
+    
 Quota 
 ------------
 The list `quota_mounts` in [defaults/main.yml](defaults/main.yml) contains all directories that will be edited in the fstab file to enable quota on

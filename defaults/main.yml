@@ -30,7 +30,7 @@ ispconfig_reconfigure_crontab: yes
 
 certbot_dir: /opt/certbot
 certbot_create_command: >-
-  {{ certbot_dir }}/certbot-auto certonly --standalone --noninteractive --agree-tos
+  {{ certbot_dir }}/certbot-auto certonly {{'--staging' if certbot.staging else ''}} --standalone --noninteractive --agree-tos
   --email {{ cert_item.email | default(certbot.admin_email) }}
   -d {{ cert_item  }}
 
