@@ -7,36 +7,32 @@
   vars:
     packages:
       - amavisd-new
-      - spamassassin
+      - apt-listchanges
+      - arj
+      - bzip2
+      - cabextract
       - clamav
       - clamav-daemon
-      - unzip
-      - bzip2
-      - arj
-      - nomarch
-      - lzop
-      - cabextract
-      - apt-listchanges
-      - libnet-ldap-perl
-      - libauthen-sasl-perl
       - clamav-docs
       - daemon
-      - libio-string-perl
+      - libauthen-sasl-perl
       - libio-socket-ssl-perl
-      - libnet-ident-perl
-      - zip
+      - libio-string-perl
       - libnet-dns-perl
+      - libnet-ident-perl
+      - libnet-ldap-perl
+      - lzop
+      - nomarch
       - patch
+      - spamassassin
+      - unzip
+      - zip
 
-- name: Stop spamassassin
+- name: Stop and disable spamassassin daemon
   service:
     name: spamassassin
     state: stopped
-
-- name: Free Ram from Spamassassin
-  apt:
-    name: spamassassin
-    state: absent
+    enabled: no
 
 - name: Start freshclam-daemon
   service:
