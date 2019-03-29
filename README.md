@@ -128,7 +128,9 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `admin_email`: Used for Let's Encrypt's CA authorization.
     * `create_standalone_stop_services`: List of services that should be stopped while certbot creates certificates.
     * `install_from_source`: Set this to true or yes if you want the certbot installation from source instead.
-    * `certs_domains`: A list of domains for which certificates will be created.
+    * `certs`: A list of domains for which certificates will be created.
+        * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
+        a new `domains` entry (see example playbook).
     * `staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
     delay.  
@@ -297,10 +299,14 @@ This shows an example how you could configure your playbook.
           certbot:
             admin_email: certificate@your-company.de
             create_standalone_stop_services: apache
-            install_from_source: yes
-            certs_domains: 
-                - subdomain.your-company.de
+            install_from_source: yes        
             staging: no
+            certs:
+                - domains:
+                  - subdomain1@your-company.de
+                  - subdomain2@your-company.de
+                - domains:
+                  - newdomain@your-company.de
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
