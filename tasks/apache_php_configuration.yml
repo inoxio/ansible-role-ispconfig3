@@ -16,6 +16,12 @@
       - php{{ php_version }}-mysql
       - php{{ php_version }}-imap
 
+- name: Setup default http-vhost to serve well-known acme challenge
+  copy:
+    src: files/etc/apache2/sites-available/000-default.conf
+    dest: /etc/apache2/sites-available/000-default.conf
+    mode: 0644
+
 - name: Set default admin user to install phpmyadmin without questions
   debconf:
     name: phpmyadmin
