@@ -13,8 +13,8 @@
       - php{{ php_version }}
       - php{{ php_version }}-common
       - php{{ php_version }}-gd
-      - php{{ php_version }}-mysql
       - php{{ php_version }}-imap
+      - php{{ php_version }}-mysql
 
 - name: Setup default http-vhost to serve well-known acme challenge
   copy:
@@ -50,32 +50,31 @@
     update_cache: yes
   vars:
     packages:
-      - phpmyadmin
-      - php{{ php_version }}-cli
-      - php{{ php_version }}-cgi
-      - libapache2-mod-fcgid
       - apache2-suexec-pristine
-      - php-pear
-      - mcrypt
       - imagemagick
-      - libruby
+      - libapache2-mod-fcgid
       - libapache2-mod-python
+      - mcrypt
+      - memcached
+      - php-gettext
+      - php-imagick
+      - php-memcache
+      - php-pear
+      - php-soap
+      - phpmyadmin
+      - php{{ php_version }}-cgi
+      - php{{ php_version }}-cli
       - php{{ php_version }}-curl
       - php{{ php_version }}-intl
+      - php{{ php_version }}-mbstring
       - php{{ php_version }}-pspell
       - php{{ php_version }}-recode
+      - php{{ php_version }}-soap
       - php{{ php_version }}-sqlite3
       - php{{ php_version }}-tidy
       - php{{ php_version }}-xmlrpc
       - php{{ php_version }}-xsl
-      - memcached
-      - php-memcache
-      - php-imagick
-      - php-gettext
       - php{{ php_version }}-zip
-      - php{{ php_version }}-mbstring
-      - php-soap
-      - php{{ php_version }}-soap
 
 # ----------------Configure apache----------------
 - name: Enable apache modules
@@ -83,12 +82,12 @@
     state: present
     name: '{{ item }}'
   with_items:
-    - suexec
+    - actions
+    - cgi
+    - include
     - rewrite
     - ssl
-    - actions
-    - include
-    - cgi
+    - suexec
 
 - name: Check if httpoxy.conf exists
   stat:
@@ -123,21 +122,11 @@
   command: 'a2enconf httpoxy'
   when: not httpoxy_result.stat.exists
 
-- name: Restart apache
-  service:
-    name: apache2
-    state: restarted
-
 - name: Comment application/x-ruby rb
   replace:
     path: /etc/mime.types
     regexp: '^(.*application/x-ruby.*rb)$'
     replace: '#\1'
-
-- name: Restart apache
-  service:
-    name: apache2
-    state: restarted
 
 # ----------------Configure php----------------
 - name: Install packages for php opcode
@@ -150,11 +139,6 @@
       - php{{ php_version }}-opcache
       - php-apcu
 
-- name: Restart apache
-  service:
-    name: apache2
-    state: restarted
-
 - name: Install php{{ php_version }}-fpm
   apt:
     name: php{{ php_version }}-fpm
@@ -166,9 +150,10 @@
     name: '{{ item }}'
   with_items:
     - actions
-    - proxy_fcgi
     - alias
+    - proxy_fcgi
 
+# ----------------Restart apache----------------
 - name: Restart apache
   service:
     name: apache2
