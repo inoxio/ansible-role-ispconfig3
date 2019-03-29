@@ -7,28 +7,8 @@
 
 - name: Write jail.local
   copy:
+    src: files/etc/fail2ban/config
     dest: /etc/fail2ban/jail.local
-    content: |
-      [pure-ftpd]
-      enabled  = true
-      port     = ftp
-      filter   = pure-ftpd
-      logpath  = /var/log/syslog
-      maxretry = 3
-
-      [dovecot]
-      enabled = true
-      filter = dovecot
-      action = iptables-multiport[name=dovecot-pop3imap, port="pop3,pop3s,imap,imaps", protocol=tcp]
-      logpath = /var/log/mail.log
-      maxretry = 5
-
-      [postfix]
-      enabled  = true
-      port     = smtp
-      filter   = postfix
-      logpath  = /var/log/mail.log
-      maxretry = 3
 
 - name: Restart fail2ban
   service:
