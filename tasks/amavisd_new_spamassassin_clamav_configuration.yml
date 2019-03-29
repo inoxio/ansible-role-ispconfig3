@@ -26,7 +26,6 @@
       - libnet-ident-perl
       - zip
       - libnet-dns-perl
-      - postgrey
       - patch
 
 - name: Stop spamassassin
