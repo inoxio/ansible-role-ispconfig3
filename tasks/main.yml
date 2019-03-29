@@ -90,8 +90,8 @@
 - include_tasks: install_ispconfig.yml
 
 #----------------Create certificates----------------------------
-- include_tasks: create-cert-standalone.yml
-  with_items: "{{ certbot.certs_domains }}"
+- include_tasks: create-certificates.yml
+  with_items: "{{ certbot.certs }}"
   loop_control:
     loop_var: cert_item
 
