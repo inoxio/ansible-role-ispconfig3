@@ -36,3 +36,9 @@
   shell: "{{ certbot_create_command }}"
   when: not letsencrypt_cert.stat.exists
 
+- name: Start services after certs have been generated.
+  service:
+    name: "{{ item }}"
+    state: started
+  when: not letsencrypt_cert.stat.exists
+  with_items: "{{ certbot.create_standalone_stop_services }}"
