@@ -50,6 +50,8 @@
     name: sendmail
     state: absent
 
+- include_tasks: debconf_save.yml
+
 # ----------------Install packages----------------------------
 - include_tasks: install_packages.yml
 

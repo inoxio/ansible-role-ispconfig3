@@ -1,0 +1,35 @@
+---
+- name: Create debconf_old directoriy
+  file:
+    path: /var/cache/debconf_old
+    state: directory
+
+- name: Save old debconf
+  copy:
+    src: /var/cache/debconf/config.dat
+    dest: /var/cache/debconf_old/config.dat
+    remote_src: true
+
+- name: Save old debconf
+  copy:
+    src: /var/cache/debconf/config.dat-old
+    dest: /var/cache/debconf_old/config.dat-old
+    remote_src: true
+
+- name: Save old debconf
+  copy:
+    src: /var/cache/debconf/passwords.dat
+    dest: /var/cache/debconf_old/passwords.dat
+    remote_src: true
+
+- name: Save old debconf
+  copy:
+    src: /var/cache/debconf/templates.dat
+    dest: /var/cache/debconf_old/templates.dat
+    remote_src: true
+
+- name: Save old debconf
+  copy:
+    src: /var/cache/debconf/templates.dat-old
+    dest: /var/cache/debconf_old/templates.dat-old
+    remote_src: true
