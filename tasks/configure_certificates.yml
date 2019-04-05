@@ -12,21 +12,22 @@
 
 - name: Create symlinks to Let's Encrypt SSL files
   file:
-    src: '/etc/letsencrypt/live/{{ item }}/fullchain.pem'
+    src: '/etc/letsencrypt/live/{{ item.domains.0 }}/fullchain.pem'
     dest: '/usr/local/ispconfig/interface/ssl/ispserver.crt'
     state: link
-  with_items: "{{ certbot.certs_domains }}"
+    follow: yes
+  with_items: "{{ certbot.certs }}"
 
 - name: Create symlinks to Let's Encrypt SSL files
   file:
-    src: '/etc/letsencrypt/live/{{ item }}/privkey.pem'
+    src: '/etc/letsencrypt/live/{{ item.domains.0 }}/privkey.pem'
     dest: '/usr/local/ispconfig/interface/ssl/ispserver.key'
     state: link
-  with_items: "{{ certbot.certs_domains }}"
+    follow: yes
+  with_items: "{{ certbot.certs }}"
 
 - name: Start services after cert has been generated
   service:
-    name: "{{ item }}"
+    name: "{{ certbot.create_standalone_stop_services }}"
     state: started
   when: not letsencrypt_cert.stat.exists
-  with_items: "{{ certbot.create_standalone_stop_services }}"
