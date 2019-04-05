@@ -99,6 +99,7 @@
 
 #----------------Configure certificates-------------------------
 - include_tasks: configure_certificates.yml
+  when: certbot.certs | length > 0
 
 - include_tasks: cleanup.yml
 
