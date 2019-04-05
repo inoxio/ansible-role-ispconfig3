@@ -22,23 +22,10 @@
 
 - name: Check if certificate already exists.
   stat:
-    path: /etc/letsencrypt/live/{{ cert_item | first | replace('*.', '') }}/cert.pem
+    path: /etc/letsencrypt/live/{{ cert_item.domains.0 }}/cert.pem
+    follow: yes
   register: letsencrypt_cert
-
-- name: Stop services to allow certbot to generate a cert.
-  service:
-    name: "{{ item }}"
-    state: stopped
-  when: not letsencrypt_cert.stat.exists
-  with_items: "{{ certbot.create_standalone_stop_services }}"
 
 - name: Generate new certificate if one doesn't exist.
   shell: "{{ certbot_create_command }}"
   when: not letsencrypt_cert.stat.exists
-
-- name: Start services after certs have been generated.
-  service:
-    name: "{{ item }}"
-    state: started
-  when: not letsencrypt_cert.stat.exists
-  with_items: "{{ certbot.create_standalone_stop_services }}"
