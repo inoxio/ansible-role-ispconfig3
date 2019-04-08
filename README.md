@@ -22,12 +22,13 @@ Role Variables
 Mail, PHPMyAdmin and Roundcube will set mostly the admin passwords of the named application.
 Mail itself will also need an email with which it can send mails to.
 
-ISPConfig is here the most important part it contains a lot of different variables. 
+ISPConfig is here the most important part, it contains a lot of different variables. 
 Most of them can be translated into the autoinstall.php from ISPConfig.
 It is also important to notice that the mysql_root_password will be used for the setup 
 of the MariaDB module.  
 This happens to the ssl_cert part too, this will be used as the SSL cert is generated.
- 
+
+**Playbook** variables:
 * `mail`:
     This will set all needed variables to setup a new mailing list. It will
     automatically create a mailing list with the given Parameters.
@@ -38,42 +39,20 @@ This happens to the ssl_cert part too, this will be used as the SSL cert is gene
         the end of role execution.
     * `base_domain`: 
         Base domain for Mailman.
-    * `mailing_list_name`:
-        Sets the mailman List. It is recommended to set it as Mailman (see example playbook).
-        * Default: `Mailman`
 * `phpmyadmin`: 
     * `admin_password`: (Optional) Password for Admin Login in PHPMyadmin. If no password is set a password will be 
     generated and printed at the end of role execution.
 * `roundcube`: 
-    * `admin_password`: Password for Admin Login in Roundcube. If no password is set a generated password
+    * `admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
     will be created and printed at the end of role execution.
 * `ISPConfig`: This contains the most configurations for your ISPConfig setup. 
 Please have a look at the example provided by ISPConfig itself. 
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
-    * `language`: Set the language your ISPConfig should have.
-        * Default: `en`
-    * `install_mode`: Set the mode you want to have if you just want to install it regularly it is recommended to use the default.
-        * Default: `standard`
-    * `hostname`: This is used for your FQDN where you can set your sitename.
-    * `mysql_hostname`: Location where the MySQL Database is running, if you just use this role the default is sufficient.
-        * Default: `localhost`
     * `mysql_root_user`: Name of the root user. In most cases this will be just 'root'. If you customize your
     ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
         * Default: `root`
     * `mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
-    isn't exposed. If no password is set a password will be generated and printed at the end of role execution.
-    * `mysql_database`: Database which will be initialized in MariaDB setup and used from ISPConfig. 
-        * Default: `dbISPConfig`
-    * `mysql_port`: Port which is used by MariaDB, it is also used for the database initialization.  
-        * Default: `3306`
-    * `mysql_charset`: Charset of the database.  
-        * Default: `utf8`
-    * `http_server`: Sets the HTTP server which is running behind the ISPConfig site.
-        * Default: `apache`
-    * `ISPConfig_port`: Port for the Website to use.
-        * Default: `8080`
-    * `ISPConfig_use_ssl`:  Use SSL to connect to ISPConfig.
-        * Default: `y`
+    isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
     * `ISPConfig_admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
     generated and printed at the end of role execution.
     * `ssl_cert_country`: Your country. 
@@ -85,42 +64,9 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `mysql_ISPConfig_user`: User which will be created inside the MySQL database.
         * Default: `ISPConfig`
     * `mysql_ISPConfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
-    printed at the end of role execution.
-        
-    * `join_multiserver_setup`: Joins multiple servers. 
-        * Default: `n`
-    * `mysql_master_hostname`: Location of the master MySQL database, for most cases 'localhost' is sufficient.
-        * Default: `localhost`
+    printed at the end of role execution.    
     * `mysql_master_root_password`: (Optional) Password for the root user of the master data. If no password is set a 
-    password will be generated and printed at the end of role execution.
-    * `configure_mail`: Mailman setup for ISPConfig.
-        * Default: `y`
-    * `configure_jailkit`: Jailkit setup for ISPConfig.
-        * Default: `y`
-    * `configure_ftp`: PureFTP setup for ISPConfig.
-        * Default: `y`
-    * `configure_dns`: DNS setup for ISPConfig.
-        * Default: `y`
-    * `configure_nginx`: NGINX setup for ISPConfig.
-        * Default: `n`
-    * `configure_apache`: Apache setup for ISPConfig.
-        * Default: `y`
-    * `configure_firewall`: Firewall setup for ISPConfig.
-        * Default: `y`
-    * `install_ISPConfig_web_interface`: Webinterface setup for ISPConfig.
-        * Default: `y`
-    * `do_backup`: Backup setup for ISPConfig.
-        * Default: `yes`
-    * `mysql_master_database`: Database which contains the information for ISPConfig.
-        * Default: `dbISPConfig`
-    * `reconfigure_permissions_in_master_database`: Sets the permissions needed for ISPConfig in the database. 
-        * Default: `no`
-    * `reconfigure_services`: Reconfigures all services.
-        * Default: `yes`
-    * `create_new_ISPConfig_ssl_cert`: Creates new certificate (will not be needed). 
-        * Default: `no`
-    * `reconfigure_crontab`: Configures cronjob.
-        * Default: `yes`
+    password will be generated and printed at the end of role execution.  
     * `port`: Sets the port for ISPConfig Service.
 * `quota`: (Optional)
     * `mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
@@ -134,7 +80,78 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
     delay.  
-    
+   
+[Default](defaults/main.yml) variables:
+* `mailing_list_name`:
+    Sets the mailman List. It is recommended to set it as Mailman (see example playbook).
+    * Default: `Mailman` 
+* `ispconfig_language`: Set the language your ISPConfig should have.
+    * Default: `en`
+* `ispconfig_install_mode`: Set the mode you want to have if you just want to install it regularly it is recommended to use the default.
+    * Default: `standard`
+* `ispconfig_hostname`: This is used for your FQDN where you can set your sitename.
+* `ispconfig_mysql_hostname`: Location where the MySQL Database is running, if you just use this role the default is sufficient.
+    * Default: `localhost` 
+* `ispconfig_mysql_database`: Database which will be initialized in MariaDB setup and used from ISPConfig. 
+    * Default: `dbISPConfig`
+* `ispconfig_mysql_port`: Port which is used by MariaDB, it is also used for the database initialization.  
+    * Default: `3306`
+* `ispconfig_mysql_charset`: Charset of the database.  
+    * Default: `utf8`
+* `ispconfig_http_server`: Sets the HTTP server which is running behind the ISPConfig site.
+    * Default: `apache`
+* `ispconfig_ispconfig_port`: Port for the Website to use.
+    * Default: `8080`
+* `ispconfig_ispconfig_use_ssl`:  Use SSL to connect to ISPConfig.
+    * Default: `y`  
+* `ispconfig_join_multiserver_setup`: Joins multiple servers. 
+    * Default: `n`
+* `ispconfig_mysql_master_hostname`: Location of the master MySQL database, for most cases 'localhost' is sufficient.
+    * Default: `localhost`  
+* `ispconfig_configure_mail`: Mailman setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_configure_jailkit`: Jailkit setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_configure_ftp`: PureFTP setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_configure_dns`: DNS setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_configure_nginx`: NGINX setup for ISPConfig.
+    * Default: `n`
+* `ispconfig_configure_apache`: Apache setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_configure_firewall`: Firewall setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_install_ISPConfig_web_interface`: Webinterface setup for ISPConfig.
+    * Default: `y`
+* `ispconfig_do_backup`: Backup setup for ISPConfig.
+    * Default: `yes`
+* `ispconfig_mysql_master_database`: Database which contains the information for ISPConfig.
+    * Default: `dbISPConfig`
+* `ispconfig_reconfigure_permissions_in_master_database`: Sets the permissions needed for ISPConfig in the database. 
+    * Default: `no`
+* `ispconfig_reconfigure_services`: Reconfigures all services.
+    * Default: `yes`
+* `ispconfig_create_new_ISPConfig_ssl_cert`: Creates new certificate (will not be needed). 
+    * Default: `no`
+* `ispconfig_reconfigure_crontab`: Configures cronjob.
+    * Default: `yes`
+ 
+* `certbot_dir`:  Defines the path where certbot will be installed.
+    * Default: `/opt/certbot`      
+* `certbot_default_service`: List of services that will be restarted when a certificate for a domain was created. The
+service can be overwritten by stating it in the playbook (see Playbook variables).
+    * Default: `apache2`        
+* `certbot_create_command`: Command for creating certificates.
+    * Default: `{{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot.staging else '' }} --webroot --noninteractive --agree-tos
+  --email {{ cert_item.email | default(certbot.admin_email) }}
+  -d {{ cert_item.domains | join(',') }}
+  --deploy-hook "service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
+  {{ '--post-hook "'~cert_item.post_hook | join('; ')~'"' if cert_item.post_hook is defined else '' }}
+  --webroot-path /var/www`        
+* `quota_mounts`:  List of directories that quota will watch over.
+    * Default: `/`
+          
 Quota 
 ------------
 The list `quota_mounts` in [defaults/main.yml](defaults/main.yml) contains all directories that will be edited in the fstab file to enable quota on
@@ -142,12 +159,6 @@ them. If the list is empty quota will not be enabled. You can overwrite this lis
 (See section "Role Variables"). If the kernel on your machine does not contain the quota
 modules, you have to keep the list empty. This is the case for AWS machines that use the 
 [linux-aws kernel](https://bugs.launchpad.net/ubuntu/+source/linux-aws/+bug/1773172).
-
-
-Dependencies
-------------
-
-This role has no external dependencies, everything needed is inside this role.
 
 Start and Test
 --------------
