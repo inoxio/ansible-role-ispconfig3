@@ -35,7 +35,8 @@ certbot_create_command: >-
   {{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot.staging else '' }} --webroot --noninteractive --agree-tos
   --email {{ cert_item.email | default(certbot.admin_email) }}
   -d {{ cert_item.domains | join(',') }}
-  --deploy-hook "{{ cert_item.commands | default('') | join('; ') }}{{ ';' if cert_item.commands is defined else '' }} service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
+  --deploy-hook "service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
+  {{ '--post-hook "'~cert_item.post_hook | join('; ')~'"' if cert_item.post_hook is defined else '' }}
   --webroot-path /var/www
 
 quota_mounts:
