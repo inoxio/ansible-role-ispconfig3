@@ -77,6 +77,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * `certs`: A list of domains for which certificates will be created.
         * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
         a new `domains` entry (see example playbook).
+        * `post_hook`: (Optional) This is a list of commands that should be executed after the cert was created.
+        * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
     * `staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
     delay.  
@@ -159,6 +161,55 @@ them. If the list is empty quota will not be enabled. You can overwrite this lis
 (See section "Role Variables"). If the kernel on your machine does not contain the quota
 modules, you have to keep the list empty. This is the case for AWS machines that use the 
 [linux-aws kernel](https://bugs.launchpad.net/ubuntu/+source/linux-aws/+bug/1773172).
+
+Example Playbook
+----------------
+This shows an example how you could configure your playbook.
+
+        - role: inoxio.ISPConfig3
+          mail:
+            admin_email: email@your-company.com
+            admin_password: password123
+            base_domain: your-company.com
+          phpmyadmin:
+            admin_password: password123
+          roundcube:
+            admin_password: password123
+          ISPConfig:
+            hostname: ispconfig.your-company.com
+            mysql_root_user: root
+            mysql_root_password: secret
+            ISPConfig_admin_password: secret
+            mysql_ISPConfig_user: ISPConfig
+            mysql_ISPConfig_password: ISPConfig
+            mysql_master_root_password: root
+            ssl_cert_country: DE
+            ssl_cert_state: Sunny State
+            ssl_cert_locality: Hill Valley
+            ssl_cert_organisation: Your Conpany Inc
+            ssl_cert_organisation_unit: Software
+            ssl_cert_common_name: ispconfig.your-company.com
+          certbot:
+            admin_email: certificate@your-company.de
+            create_standalone_stop_services: apache
+            install_from_source: yes        
+            staging: no
+            certs:
+                - domains:
+                  - subdomain1.your-company.de
+                  - subdomain2.your-company.de
+                - domains:
+                    - ftp.your-company.de
+                  post_hook:
+                    - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
+                  services:
+                    - pureftpd
+     
+Everything else mentioned in role variables can be found in the defaults/main.yml.  
+All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
+See [this link](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample) 
+for more information. 
+You can find example settings under autoinstall.php for ISPConfig.
 
 Start and Test
 --------------
@@ -279,51 +330,6 @@ for this test scenario.
          - role: inoxio.ISPConfig3
              ***
              ***
-
-Example Playbook
-----------------
-This shows an example how you could configure your playbook.
-
-        - role: inoxio.ISPConfig3
-          mail:
-            admin_email: email@your-company.com
-            admin_password: password123
-            base_domain: your-company.com
-          phpmyadmin:
-            admin_password: password123
-          roundcube:
-            admin_password: password123
-          ISPConfig:
-            hostname: ispconfig.your-company.com
-            mysql_root_user: root
-            mysql_root_password: secret
-            ISPConfig_admin_password: secret
-            mysql_ISPConfig_user: ISPConfig
-            mysql_ISPConfig_password: ISPConfig
-            mysql_master_root_password: root
-            ssl_cert_country: DE
-            ssl_cert_state: Sunny State
-            ssl_cert_locality: Hill Valley
-            ssl_cert_organisation: Your Conpany Inc
-            ssl_cert_organisation_unit: Software
-            ssl_cert_common_name: ispconfig.your-company.com
-          certbot:
-            admin_email: certificate@your-company.de
-            create_standalone_stop_services: apache
-            install_from_source: yes        
-            staging: no
-            certs:
-                - domains:
-                  - subdomain1@your-company.de
-                  - subdomain2@your-company.de
-                - domains:
-                  - newdomain@your-company.de
-     
-Everything else mentioned in role variables can be found in the defaults/main.yml.  
-All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
-See [this link](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample) 
-for more information. 
-You can find example settings under autoinstall.php for ISPConfig.
 
 
 Author Information
