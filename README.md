@@ -55,12 +55,6 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
     * `ISPConfig_admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
     generated and printed at the end of role execution.
-    * `ssl_cert_country`: Your country. 
-    * `ssl_cert_state`: Your state.
-    * `ssl_cert_locality`: Your city.
-    * `ssl_cert_organisation`: Your company.
-    * `ssl_cert_organisation_unit`: Your department.
-    * `ssl_cert_common_name`: FQDN of your site.
     * `mysql_ISPConfig_user`: User which will be created inside the MySQL database.
         * Default: `ISPConfig`
     * `mysql_ISPConfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
@@ -183,12 +177,6 @@ This shows an example how you could configure your playbook.
             mysql_ISPConfig_user: ISPConfig
             mysql_ISPConfig_password: ISPConfig
             mysql_master_root_password: root
-            ssl_cert_country: DE
-            ssl_cert_state: Sunny State
-            ssl_cert_locality: Hill Valley
-            ssl_cert_organisation: Your Conpany Inc
-            ssl_cert_organisation_unit: Software
-            ssl_cert_common_name: ispconfig.your-company.com
           certbot:
             admin_email: certificate@your-company.de
             create_standalone_stop_services: apache

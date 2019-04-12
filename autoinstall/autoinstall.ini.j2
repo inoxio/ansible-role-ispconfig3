@@ -14,12 +14,12 @@ ispconfig_use_ssl={{ ispconfig_ispconfig_use_ssl }}
 ispconfig_admin_password={{ ispconfig.ispconfig_admin_password | default(ispconfig_admin_password) }}
 
 [ssl_cert]
-ssl_cert_country={{ ispconfig.ssl_cert_country }}
-ssl_cert_state={{ ispconfig.ssl_cert_state }}
-ssl_cert_locality={{ ispconfig.ssl_cert_locality }}
-ssl_cert_organisation={{ ispconfig.ssl_cert_organisation  }}
-ssl_cert_organisation_unit={{ ispconfig.ssl_cert_organisation_unit }}
-ssl_cert_common_name={{ ispconfig.ssl_cert_common_name }}
+ssl_cert_country=DummyCountry
+ssl_cert_state=DummyState
+ssl_cert_locality=DummyTown
+ssl_cert_organisation=DummyCompany
+ssl_cert_organisation_unit=DummyUnit
+ssl_cert_common_name=DummyName
 
 [expert]
 mysql_ispconfig_user={{ ispconfig.mysql_ispconfig_user }}
