@@ -1,4 +1,32 @@
 ---
+- name: Check if mail.admin_email is given in playbook
+  debug:
+    msg: "{{ mail.admin_email }}"
+
+- name: Check if mail.base_domain is given in playbook
+  debug:
+    msg: "{{ mail.base_domain }}"
+
+- name: Check if phpmyadmin.domain is given in playbook
+  debug:
+    msg: "{{ phpmyadmin.domain }}"
+
+- name: Check if ispconfig.hostname is given in playbook
+  debug:
+    msg: "{{ ispconfig.hostname }}"
+
+- name: Check if ispconfig.mysql_root_user is given in playbook
+  debug:
+    msg: "{{ ispconfig.mysql_root_user }}"
+
+- name: Check if ispconfig.mysql_ispconfig_user is given in playbook
+  debug:
+    msg: "{{ ispconfig.mysql_ispconfig_user }}"
+
+- name: Check if certbot.admin_email is given in playbook
+  debug:
+    msg: "{{ certbot.admin_email }}"
+
 - name: Generate mail password
   set_fact:
       mail_admin_password: "{{ mail.admin_password |
