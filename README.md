@@ -72,6 +72,8 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
         * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
         a new `domains` entry (see example playbook).
         * `post_hook`: (Optional) This is a list of commands that should be executed after the cert was created.
+        You should insert commands for creating soft links to the certificates for your used technologies. See example
+        playbook for examples for ftp and mail.
         * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
     * `staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
@@ -184,14 +186,27 @@ This shows an example how you could configure your playbook.
             staging: no
             certs:
                 - domains:
-                  - subdomain1.your-company.de
-                  - subdomain2.your-company.de
+                    - subdomain1.your-company.de
+                    - subdomain2.your-company.de
+                  post_hook:
+                    - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
+                    - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
                 - domains:
                     - ftp.your-company.de
                   post_hook:
                     - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
                   services:
                     - pureftpd
+                - domains:
+                    - mail.your-company.de
+                    - imap.your-company.de
+                    - pop.your-company.de
+                  post_hook:
+                    - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
+                    - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
+                  services:
+                    - dovecot
+                    - postfix
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
