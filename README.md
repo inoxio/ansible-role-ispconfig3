@@ -45,19 +45,19 @@ This happens to the ssl_cert part too, this will be used as the SSL cert is gene
 * `roundcube`: 
     * `admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
     will be created and printed at the end of role execution.
-* `ISPConfig`: This contains the most configurations for your ISPConfig setup. 
+* `ispconfig`: This contains the most configurations for your ISPConfig setup. 
 Please have a look at the example provided by ISPConfig itself. 
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
+    * `admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
+    generated and printed at the end of role execution.
     * `mysql_root_user`: Name of the root user. In most cases this will be just 'root'. If you customize your
     ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
         * Default: `root`
     * `mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
     isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
-    * `ISPConfig_admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
-    generated and printed at the end of role execution.
-    * `mysql_ISPConfig_user`: User which will be created inside the MySQL database.
+    * `mysql_ispconfig_user`: User which will be created inside the MySQL database.
         * Default: `ISPConfig`
-    * `mysql_ISPConfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
+    * `mysql_ispconfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
     printed at the end of role execution.    
     * `mysql_master_root_password`: (Optional) Password for the root user of the master data. If no password is set a 
     password will be generated and printed at the end of role execution.  
@@ -120,7 +120,7 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * Default: `y`
 * `ispconfig_configure_firewall`: Firewall setup for ISPConfig.
     * Default: `y`
-* `ispconfig_install_ISPConfig_web_interface`: Webinterface setup for ISPConfig.
+* `ispconfig_install_ispconfig_web_interface`: Webinterface setup for ISPConfig.
     * Default: `y`
 * `ispconfig_do_backup`: Backup setup for ISPConfig.
     * Default: `yes`
@@ -130,7 +130,7 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * Default: `no`
 * `ispconfig_reconfigure_services`: Reconfigures all services.
     * Default: `yes`
-* `ispconfig_create_new_ISPConfig_ssl_cert`: Creates new certificate (will not be needed). 
+* `ispconfig_create_new_ispconfig_ssl_cert`: Creates new certificate (will not be needed). 
     * Default: `no`
 * `ispconfig_reconfigure_crontab`: Configures cronjob.
     * Default: `yes`
@@ -162,7 +162,7 @@ Example Playbook
 ----------------
 This shows an example how you could configure your playbook.
 
-        - role: inoxio.ISPConfig3
+        - role: inoxio.ispconfig3
           mail:
             admin_email: email@your-company.com
             admin_password: password123
@@ -171,13 +171,13 @@ This shows an example how you could configure your playbook.
             admin_password: password123
           roundcube:
             admin_password: password123
-          ISPConfig:
+          ispconfig:
+            admin_password: secret
             hostname: ispconfig.your-company.com
             mysql_root_user: root
             mysql_root_password: secret
-            ISPConfig_admin_password: secret
-            mysql_ISPConfig_user: ISPConfig
-            mysql_ISPConfig_password: ISPConfig
+            mysql_ispconfig_user: ISPConfig
+            mysql_ispconfig_password: ISPConfig
             mysql_master_root_password: root
           certbot:
             admin_email: certificate@your-company.de
@@ -330,7 +330,7 @@ for this test scenario.
     - name: Converge
       hosts: all
       roles:
-         - role: inoxio.ISPConfig3
+         - role: inoxio.ispconfig3
              ***
              ***
 
