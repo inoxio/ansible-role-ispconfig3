@@ -13,7 +13,7 @@
   DocumentRoot /usr/share/phpmyadmin
 
   SSLEngine On
-  SSLCertificateFile /etc/letsencrypt/live/{{ phpmyadmin.domain | de}}/fullchain.pem
+  SSLCertificateFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/fullchain.pem
   SSLCertificateKeyFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/privkey.pem
   SSLCertificateChainFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/chain.pem
 
