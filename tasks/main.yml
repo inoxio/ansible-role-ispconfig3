@@ -99,10 +99,6 @@
   loop_control:
     loop_var: cert_item
 
-#----------------Configure certificates-------------------------
-- include_tasks: configure_certificates.yml
-  when: certbot.certs | length > 0
-
 - include_tasks: cleanup.yml
 
 - name: Print all passwords
