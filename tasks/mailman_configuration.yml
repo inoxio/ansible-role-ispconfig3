@@ -47,7 +47,7 @@
 
 - name: Create first mailing list if it does not exist already
   command: 'newlist --quiet --urlhost=lists.{{ mail_base_domain }} {{ mailing_list_name }}
-            {{ mail_admin_email }} {{ mail_admin_password | default(mail_admin_password) }}'
+            {{ mail_admin_email }} {{ mail_admin_password }}'
   when: not mailing_list_name in mailing_list_exists.stdout
 
 - name: Add new aliases for mailman
