@@ -18,8 +18,8 @@
 
 - name: Setup default http-vhost to serve well-known acme challenge
   copy:
-    src: files/etc/apache2/sites-available/000-default.conf
-    dest: /etc/apache2/sites-available/000-default.conf
+    src: files/etc/apache2/sites-available/999-default.vhost
+    dest: /etc/apache2/sites-available/999-default.vhost
     mode: 0644
 
 - name: Set default admin user to install phpmyadmin without questions
@@ -82,7 +82,6 @@
     name: '{{ item }}'
   with_items:
     - actions
-    - cgi
     - include
     - rewrite
     - ssl
