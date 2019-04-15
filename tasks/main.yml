@@ -52,7 +52,7 @@
       ispconfig_mysql_ispconfig_password: "{{ ispconfig.mysql_ispconfig_password |
                               default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
       ispconfig_mysql_master_root_password: "{{ ispconfig.mysql_master_root_password |
-                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
+                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
 
 - name: Switch shell to bash
   file:
