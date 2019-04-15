@@ -174,15 +174,8 @@ This shows an example how you could configure your playbook.
 
     - role: inoxio.ispconfig3
       mail_admin_email: email@your-company.com
-      mail_admin_password: password123
       mail_base_domain: your-company.com
-      phpmyadmin_admin_password: password123
-      roundcube_admin_password: password123
-      ispconfig_admin_password: password123
       ispconfig_hostname: ispconfig.your-company.com
-      ispconfig_mysql_root_password: password123
-      ispconfig_mysql_ispconfig_password: password123
-      ispconfig_mysql_master_root_password: password123
       certbot_admin_email: certificate@your-company.de
       certbot_certs:
             - domains:
