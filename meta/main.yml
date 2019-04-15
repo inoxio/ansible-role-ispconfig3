@@ -29,7 +29,4 @@ galaxy_info:
 
 dependencies:
   - role: geerlingguy.certbot
-    certbot_admin_email: "{{ certbot.admin_email }}"
-    certbot_create_standalone_stop_services:
-      - "{{ certbot.create_standalone_stop_services | default(certbot_create_standalone_stop_services) }}"
-    certbot_install_from_source: "{{ certbot.install_from_source | default(certbot_install_from_source) }}"
+    certbot_install_from_source: yes
