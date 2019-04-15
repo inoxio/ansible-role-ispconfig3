@@ -16,7 +16,7 @@
     - "localhost"
 
 - name: Remove the MySQL test database
-  action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}" db=test state=absent
+  action: mysql_db login_user=root login_password="{{ ispconfig_mysql_root_password }}" db=test state=absent
 
 - name: Change root user password on first run
   mysql_user:
