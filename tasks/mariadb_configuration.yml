@@ -15,6 +15,9 @@
     - ""
     - "localhost"
 
+- name: Remove the MySQL test database
+  action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}" db=test state=absent
+
 - name: Change root user password on first run
   mysql_user:
     check_implicit_admin: yes
@@ -27,5 +30,14 @@
     - "::1"
     - "localhost"
 
-- name: Remove the MySQL test database
-  action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}" db=test state=absent
+- name: 'Get pluginstate for mysql user root@localhost'
+  shell: |
+    mysql -NBe 'SELECT plugin FROM mysql.user WHERE HOST = "localhost" AND USER = "root"'
+  failed_when: no
+  changed_when: no
+  register: mysql_plugin_output
+
+- name: 'Delete plugins from mysql user root@localhost'
+  shell: |
+    mysql -NBe 'UPDATE mysql.user SET plugin = "" WHERE HOST = "localhost" AND USER = "root"; FLUSH PRIVILEGES;'
+  when: mysql_plugin_output.stdout IS NOT ""
