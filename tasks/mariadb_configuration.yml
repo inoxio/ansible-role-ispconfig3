@@ -40,4 +40,4 @@
 - name: 'Delete plugins from mysql user root@localhost'
   shell: |
     mysql -NBe 'UPDATE mysql.user SET plugin = "" WHERE HOST = "localhost" AND USER = "root"; FLUSH PRIVILEGES;'
-  when: mysql_plugin_output.stdout IS NOT ""
+  when: mysql_plugin_output.stdout
