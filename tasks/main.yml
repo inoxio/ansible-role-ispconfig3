@@ -15,14 +15,6 @@
   debug:
     msg: "{{ ispconfig.hostname }}"
 
-- name: Check if ispconfig.mysql_root_user is given in playbook
-  debug:
-    msg: "{{ ispconfig.mysql_root_user }}"
-
-- name: Check if ispconfig.mysql_ispconfig_user is given in playbook
-  debug:
-    msg: "{{ ispconfig.mysql_ispconfig_user }}"
-
 - name: Check if certbot.admin_email is given in playbook
   debug:
     msg: "{{ certbot.admin_email }}"
