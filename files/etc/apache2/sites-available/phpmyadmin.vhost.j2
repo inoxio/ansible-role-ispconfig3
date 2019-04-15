@@ -1,21 +1,21 @@
 <VirtualHost *:80>
-  ServerName {{ phpmyadmin.domain }}
+  ServerName {{ phpmyadmin_domain }}
 
   RewriteEngine On
   RewriteCond %{SERVER_PORT} !^443$
-  RewriteRule ^(.*)$ https://{{ phpmyadmin.domain }}$1 [L,R]
+  RewriteRule ^(.*)$ https://{{ phpmyadmin_domain }}$1 [L,R]
 
   ServerSignature Off
 </VirtualHost>
 
 <VirtualHost *:443>
-  ServerName {{ phpmyadmin.domain }}
+  ServerName {{ phpmyadmin_domain }}
   DocumentRoot /usr/share/phpmyadmin
 
   SSLEngine On
-  SSLCertificateFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/privkey.pem
-  SSLCertificateChainFile /etc/letsencrypt/live/{{ phpmyadmin.domain }}/chain.pem
+  SSLCertificateFile /etc/letsencrypt/live/{{ phpmyadmin_domain }}/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/{{ phpmyadmin_domain }}/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/{{ phpmyadmin_domain }}/chain.pem
 
   <Directory /usr/share/phpmyadmin>
     Options FollowSymLinks
@@ -35,8 +35,8 @@
 
   </Directory>
 
-  ErrorLog /var/log/apache2/{{ phpmyadmin.domain }}_error.log
-  CustomLog /var/log/apache2/{{ phpmyadmin.domain }}_access.log combined
+  ErrorLog /var/log/apache2/{{ phpmyadmin_domain }}_error.log
+  CustomLog /var/log/apache2/{{ phpmyadmin_domain }}_access.log combined
 
   ServerSignature Off
 

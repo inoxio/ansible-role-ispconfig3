@@ -29,60 +29,58 @@ of the MariaDB module.
 This happens to the ssl_cert part too, this will be used as the SSL cert is generated.
 
 **Playbook** variables:
-* `mail`:
-    This will set all needed variables to setup a new mailing list. It will
-    automatically create a mailing list with the given Parameters.
-    * `admin_email`: 
-        Mail which will send/receive updates from Mailman.
-    * `admin_password`: 
-        (Optional) Password for Mailman admin. If no password is set a password will be generated and printed at 
-        the end of role execution.
-    * `base_domain`: 
-        Base domain for Mailman.
-* `phpmyadmin`: 
-    * `admin_password`: (Optional) Password for Admin Login in PHPMyadmin. If no password is set a password will be 
-    generated and printed at the end of role execution.
-* `roundcube`: 
-    * `admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
+The following variables are required in the playbook (except the passwords, that will be generated if left out).
+There are checks that verify that these variables are stated in the playbook. The [default](defaults/main.yml) variables
+can be overwritten in the playbook.
+
+`Mail`: This will set all needed variables to setup a new mailing list. It will
+automatically create a mailing list with the given Parameters.
+* `mail_admin_email`: 
+    Mail which will send/receive updates from Mailman.
+* `mail_admin_password`: 
+    (Optional) Password for Mailman admin. If no password is set a password will be generated and printed at 
+    the end of role execution.
+* `mail_base_domain`: Base domain for Mailman.
+
+* `phpmyadmin_admin_password`: (Optional) Password for Admin Login in PHPMyadmin. If no password is set a password will be 
+generated and printed at the end of role execution.
+* `phpmyadmin_domain`: Base domain for phpmyadmin.
+
+* `roundcube_admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
     will be created and printed at the end of role execution.
-* `ispconfig`: This contains the most configurations for your ISPConfig setup. 
+
+`ispconfig`: This contains the most configurations for your ISPConfig setup. 
 Please have a look at the example provided by ISPConfig itself. 
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
-    * `admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
-    generated and printed at the end of role execution.
-    * `mysql_root_user`: (Optional) Name of the root user. In most cases this will be just 'root'. If you customize your
-    ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
-        * Default: `root`
-    * `mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
-    isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
-    * `mysql_ispconfig_user`: (Optional) User which will be created inside the MySQL database.
-        * Default: `ISPConfig`
-    * `mysql_ispconfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
-    printed at the end of role execution.    
-    * `mysql_master_root_password`: (Optional) Password for the root user of the master data. If no password is set a 
-    password will be generated and printed at the end of role execution.  
-    * `port`: Sets the port for ISPConfig Service.
-* `quota`: (Optional)
-    * `mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
-* `certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
-    * `admin_email`: Used for Let's Encrypt's CA authorization.
-    * `create_standalone_stop_services`: List of services that should be stopped while certbot creates certificates.
-    * `install_from_source`: (Optional) Set this to true or yes if you want the certbot installation from source instead.
-    * `certs`: A list of domains for which certificates will be created.
-        * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
-        a new `domains` entry (see example playbook).
-        * `post_hook`: (Optional) This is a list of commands that should be executed after the cert was created.
-        You should insert commands for creating soft links to the certificates for your used technologies. See example
-        playbook for examples for ftp and mail.
-        * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
-    * `staging`: (Optional) Set this variable to true or yes to create test certificates. This is useful if you have to 
-    run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
-    delay.  
+* `ispconfig_admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
+generated and printed at the end of role execution.
+* `ispconfig_mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
+isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
+* `ispconfig_mysql_ispconfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
+printed at the end of role execution.    
+* `ispconfig_mysql_master_root_password`: (Optional) Password for the root user of the master data. If no password is set a 
+password will be generated and printed at the end of role execution.
+* `ispconfig_hostname`: Name of the ISPConfig host.
+
+* `quota_mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
+
+`certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
+* `certbot_admin_email`: Used for Let's Encrypt's CA authorization.
+* `certbot_certs`: A list of domains for which certificates will be created.
+    * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
+    a new `domains` entry (see example playbook).
+    * `post_hook`: (Optional) This is a list of commands that should be executed after the cert was created.
+    You should insert commands for creating soft links to the certificates for your used technologies. See example
+    playbook for examples for ftp and mail.
+    * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
+        * Default: `apache2`
+ 
    
-[Default](defaults/main.yml) variables:
+[**Default**](defaults/main.yml) variables:
 * `mailing_list_name`:
     Sets the mailman List. It is recommended to set it as Mailman (see example playbook).
     * Default: `Mailman` 
+    
 * `ispconfig_language`: Set the language your ISPConfig should have.
     * Default: `en`
 * `ispconfig_install_mode`: Set the mode you want to have if you just want to install it regularly it is recommended to use the default.
@@ -90,8 +88,13 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
 * `ispconfig_hostname`: This is used for your FQDN where you can set your sitename.
 * `ispconfig_mysql_hostname`: Location where the MySQL Database is running, if you just use this role the default is sufficient.
     * Default: `localhost` 
+* `ispconfig_mysql_root_user`: Name of the root user. In most cases this will be just 'root'. If you customize your
+    ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
+    * Default: `root`
 * `ispconfig_mysql_database`: Database which will be initialized in MariaDB setup and used from ISPConfig. 
     * Default: `dbISPConfig`
+* `ispconfig_mysql_ispconfig_user`: User which will be created inside the MySQL database.
+    * Default: `ISPConfig`
 * `ispconfig_mysql_port`: Port which is used by MariaDB, it is also used for the database initialization.  
     * Default: `3306`
 * `ispconfig_mysql_charset`: Charset of the database.  
@@ -139,14 +142,21 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
     * Default: `/opt/certbot`      
 * `certbot_default_service`: List of services that will be restarted when a certificate for a domain was created. The
 service can be overwritten by stating it in the playbook (see Playbook variables).
-    * Default: `apache2`        
+    * Default: `apache2`  
+* `certbot_install_from_source`: Set this to true or yes if you want the certbot installation from source instead.
+* `certbot_staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
+run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
+delay.       
 * `certbot_create_command`: Command for creating certificates.
-    * Default: `{{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot.staging else '' }} --webroot --noninteractive --agree-tos
-  --email {{ cert_item.email | default(certbot.admin_email) }}
-  -d {{ cert_item.domains | join(',') }}
-  --deploy-hook "service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
-  {{ '--post-hook "'~cert_item.post_hook | join('; ')~'"' if cert_item.post_hook is defined else '' }}
-  --webroot-path /var/www`        
+    * Default: `{{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot_staging else '' }}
+      --webroot
+      --noninteractive
+      --agree-tos
+      --email {{ cert_item.email | default(certbot_admin_email) }}
+      -d {{ cert_item.domains | join(',') }}
+      --post-hook "{{ ''~cert_item.post_hook | join('; ')~'; ' if cert_item.post_hook is defined else '' }}service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
+      --webroot-path /var/www`     
+         
 * `quota_mounts`:  List of directories that quota will watch over.
     * Default: `/`
           
@@ -162,51 +172,41 @@ Example Playbook
 ----------------
 This shows an example how you could configure your playbook.
 
-        - role: inoxio.ispconfig3
-          mail:
-            admin_email: email@your-company.com
-            admin_password: password123
-            base_domain: your-company.com
-          phpmyadmin:
-            admin_password: password123
-          roundcube:
-            admin_password: password123
-          ispconfig:
-            admin_password: secret
-            hostname: ispconfig.your-company.com
-            mysql_root_user: root
-            mysql_root_password: secret
-            mysql_ispconfig_user: ISPConfig
-            mysql_ispconfig_password: ISPConfig
-            mysql_master_root_password: root
-          certbot:
-            admin_email: certificate@your-company.de
-            create_standalone_stop_services: apache
-            install_from_source: yes        
-            staging: no
-            certs:
-                - domains:
-                    - subdomain1.your-company.de
-                    - subdomain2.your-company.de
-                  post_hook:
-                    - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
-                    - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
-                - domains:
-                    - ftp.your-company.de
-                  post_hook:
-                    - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
-                  services:
-                    - pureftpd
-                - domains:
-                    - mail.your-company.de
-                    - imap.your-company.de
-                    - pop.your-company.de
-                  post_hook:
-                    - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
-                    - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
-                  services:
-                    - dovecot
-                    - postfix
+    - role: inoxio.ispconfig3
+      mail_admin_email: email@your-company.com
+      mail_admin_password: password123
+      mail_base_domain: your-company.com
+      phpmyadmin_admin_password: password123
+      roundcube_admin_password: password123
+      ispconfig_admin_password: password123
+      ispconfig_hostname: ispconfig.your-company.com
+      ispconfig_mysql_root_password: password123
+      ispconfig_mysql_ispconfig_password: password123
+      ispconfig_mysql_master_root_password: password123
+      certbot_admin_email: certificate@your-company.de
+      certbot_certs:
+            - domains:
+                - subdomain1.your-company.de
+                - subdomain2.your-company.de
+              post_hook:
+                - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
+                - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
+            - domains:
+                - ftp.your-company.de
+              post_hook:
+                - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
+              services:
+                - pureftpd
+            - domains:
+                - mail.your-company.de
+                - imap.your-company.de
+                - pop.your-company.de
+              post_hook:
+                - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
+                - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
+              services:
+                - dovecot
+                - postfix
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
@@ -214,7 +214,7 @@ See [this link](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/
 for more information. 
 You can find example settings under autoinstall.php for ISPConfig.
 
-Start and Test
+Start as VM and run tests with Molecule
 --------------
 
 Everything here is taken from https://Molecule.readthedocs.io/en/latest/. It's convenient to have everything in 

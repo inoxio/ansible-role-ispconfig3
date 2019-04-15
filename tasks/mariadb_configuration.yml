@@ -22,7 +22,7 @@
   mysql_user:
     check_implicit_admin: yes
     name: root
-    password: "{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}"
+    password: "{{ ispconfig_mysql_root_password }}"
     priv: '*.*:ALL,GRANT'
     host: "{{ item }}"
   with_items:

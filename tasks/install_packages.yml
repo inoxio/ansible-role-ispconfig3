@@ -3,7 +3,7 @@
   debconf:
     name: postfix
     question: postfix/mailname
-    value: '{{ mail.base_domain }}'
+    value: '{{ mail_base_domain }}'
     vtype: string
 
 - name: Set default mailer type to install postfix without questions

@@ -1,49 +1,49 @@
 ---
-- name: Check if mail.admin_email is given in playbook
+- name: Check if mail_admin_email is given in playbook
   debug:
-    msg: "{{ mail.admin_email }}"
+    msg: "{{ mail_admin_email }}"
 
-- name: Check if mail.base_domain is given in playbook
+- name: Check if mail_base_domain is given in playbook
   debug:
-    msg: "{{ mail.base_domain }}"
+    msg: "{{ mail_base_domain }}"
 
-- name: Check if phpmyadmin.domain is given in playbook
+- name: Check if phpmyadmin_domain is given in playbook
   debug:
-    msg: "{{ phpmyadmin.domain }}"
+    msg: "{{ phpmyadmin_domain }}"
 
-- name: Check if ispconfig.hostname is given in playbook
+- name: Check if ispconfig_hostname is given in playbook
   debug:
-    msg: "{{ ispconfig.hostname }}"
+    msg: "{{ ispconfig_hostname }}"
 
-- name: Check if certbot.admin_email is given in playbook
+- name: Check if certbot_admin_email is given in playbook
   debug:
-    msg: "{{ certbot.admin_email }}"
+    msg: "{{ certbot_admin_email }}"
 
 - name: Generate mail password
   set_fact:
-      mail_admin_password: "{{ mail.admin_password |
+      mail_admin_password: "{{ mail_admin_password |
                     default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
 - name: Generate phpmyadmin password
   set_fact:
-      phpmyadmin_admin_password: "{{ phpmyadmin.admin_password |
+      phpmyadmin_admin_password: "{{ phpmyadmin_admin_password |
                     default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
   when: phpmyadmin is not defined
 
 - name: Generate roundcube password
   set_fact:
-      roundcube_admin_password: "{{ roundcube.admin_password |
+      roundcube_admin_password: "{{ roundcube_admin_password |
                     default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
   when: roundcube is not defined
 
 - name: Generate ISPConfig passwords
   set_fact:
-      ispconfig_admin_password: "{{ ispconfig.admin_password |
+      ispconfig_admin_password: "{{ ispconfig_admin_password |
                               default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
-      ispconfig_mysql_root_password: "{{ ispconfig.mysql_root_password |
+      ispconfig_mysql_root_password: "{{ ispconfig_mysql_root_password |
                               default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
-      ispconfig_mysql_ispconfig_password: "{{ ispconfig.mysql_ispconfig_password |
+      ispconfig_mysql_ispconfig_password: "{{ ispconfig_mysql_ispconfig_password |
                               default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
-      ispconfig_mysql_master_root_password: "{{ ispconfig.mysql_master_root_password |
+      ispconfig_mysql_master_root_password: "{{ ispconfig_mysql_master_root_password |
                               default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
 
 - name: Switch shell to bash
@@ -115,7 +115,7 @@
 
 #----------------Create certificates----------------------------
 - include_tasks: create-certificates.yml
-  with_items: "{{ certbot.certs }}"
+  with_items: "{{ certbot_certs }}"
   loop_control:
     loop_var: cert_item
 
@@ -124,14 +124,14 @@
 - name: Print all passwords
   debug:
     msg:
-      - "mail.admin_password: {{ mail.admin_password | default(mail_admin_password) }}"
-      - "phpmyadmin.admin_password: {{ phpmyadmin.admin_password if phpmyadmin is defined
+      - "mail_admin_password: {{ mail_admin_password | default(mail_admin_password) }}"
+      - "phpmyadmin_admin_password: {{ phpmyadmin_admin_password if phpmyadmin is defined
                                       else phpmyadmin_admin_password }}"
-      - "roundcube.admin_password: {{ roundcube.admin_password if roundcube is defined
+      - "roundcube_admin_password: {{ roundcube_admin_password if roundcube is defined
                                       else roundcube_admin_password }}"
-      - "ispconfig.admin_password: {{ ispconfig.ispconfig_admin_password | default(ispconfig_admin_password) }}"
-      - "ispconfig.mysql_root_password: {{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}"
-      - "ispconfig.mysql_ispconfig_password: {{ ispconfig.mysql_ispconfig_password
+      - "ispconfig_admin_password: {{ ispconfig_ispconfig_admin_password | default(ispconfig_admin_password) }}"
+      - "ispconfig_mysql_root_password: {{ ispconfig_mysql_root_password | default(ispconfig_mysql_root_password) }}"
+      - "ispconfig_mysql_ispconfig_password: {{ ispconfig_mysql_ispconfig_password
                                                 | default(ispconfig_mysql_ispconfig_password) }}"
-      - "ispconfig.mysql_master_root_password: {{ ispconfig.mysql_master_root_password
+      - "ispconfig_mysql_master_root_password: {{ ispconfig_mysql_master_root_password
                                                   | default(ispconfig_mysql_master_root_password) }}"

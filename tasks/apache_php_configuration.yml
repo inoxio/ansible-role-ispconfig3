@@ -33,7 +33,7 @@
   debconf:
     name: phpmyadmin
     question: phpmyadmin/mysql/admin-pass
-    value: '{{ phpmyadmin.admin_password if phpmyadmin is defined else phpmyadmin_admin_password }}'
+    value: '{{ phpmyadmin_admin_password }}'
     vtype: string
 
 - name: Set default webserver to install phpmyadmin without questions
@@ -161,7 +161,7 @@
 
 - name: Check that phpmyadmin cert is present
   stat:
-    path: /etc/letsencrypt/live/{{ phpmyadmin.domain }}/fullchain.pem
+    path: /etc/letsencrypt/live/{{ phpmyadmin_domain }}/fullchain.pem
   register: phpmyadmin_stat_result
 
 - name: Enable phpmyadmin apache vhost
