@@ -53,7 +53,6 @@
       - apache2-suexec-pristine
       - imagemagick
       - libapache2-mod-fcgid
-      - libapache2-mod-python
       - mcrypt
       - memcached
       - php-gettext
