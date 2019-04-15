@@ -120,7 +120,7 @@
     loop_var: cert_item
 
 #----------------Configure Apache VHost PHPMyadmin----------------------------
-- include_task: phpmyadmin.yml
+- include_tasks: phpmyadmin.yml
 
 - include_tasks: cleanup.yml
 
