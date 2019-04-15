@@ -17,7 +17,6 @@
     - ""
     - "{{ ansible_nodename }}"
     - "localhost"
-  tags: mariadb
 
 - name: Change root user password on first run
   mysql_user:
@@ -33,7 +32,6 @@
     - "127.0.0.1"
     - "::1"
     - "localhost"
-  tags: mariadb
 
 - name: Remove the MySQL test database
   action: mysql_db login_user=root login_password="{{ ispconfig.mysql_root_password | default(ispconfig_mysql_root_password) }}" db=test state=absent
