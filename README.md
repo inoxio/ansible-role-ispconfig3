@@ -178,28 +178,28 @@ This shows an example how you could configure your playbook.
       ispconfig_hostname: ispconfig.your-company.com
       certbot_admin_email: certificate@your-company.de
       certbot_certs:
-            - domains:
-                - subdomain1.your-company.de
-                - subdomain2.your-company.de
-              post_hook:
-                - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
-                - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
-            - domains:
-                - ftp.your-company.de
-              post_hook:
-                - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
-              services:
-                - pureftpd
-            - domains:
-                - mail.your-company.de
-                - imap.your-company.de
-                - pop.your-company.de
-              post_hook:
-                - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
-                - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
-              services:
-                - dovecot
-                - postfix
+        - domains:
+            - subdomain1.your-company.de
+            - subdomain2.your-company.de
+          post_hook:
+            - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
+            - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.de/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
+        - domains:
+            - ftp.your-company.de
+          post_hook:
+            - cat /etc/letsencrypt/live/ftp.your-company.de/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
+          services:
+            - pureftpd
+        - domains:
+            - mail.your-company.de
+            - imap.your-company.de
+            - pop.your-company.de
+          post_hook:
+            - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
+            - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
+          services:
+            - dovecot
+            - postfix
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
