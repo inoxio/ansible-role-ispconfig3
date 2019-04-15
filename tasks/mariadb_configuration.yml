@@ -13,7 +13,6 @@
     state: absent
   with_items:
     - ""
-    - "{{ ansible_nodename }}"
     - "localhost"
 
 - name: Change root user password on first run
@@ -24,7 +23,6 @@
     priv: '*.*:ALL,GRANT'
     host: "{{ item }}"
   with_items:
-    - "{{ ansible_nodename }}"
     - "127.0.0.1"
     - "::1"
     - "localhost"
