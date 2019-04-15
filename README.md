@@ -50,12 +50,12 @@ Please have a look at the example provided by ISPConfig itself.
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
     * `admin_password`: (Optional) Password for the ISPConfig Admin Login. If no password is set a password will be 
     generated and printed at the end of role execution.
-    * `mysql_root_user`: Name of the root user. In most cases this will be just 'root'. If you customize your
+    * `mysql_root_user`: (Optional) Name of the root user. In most cases this will be just 'root'. If you customize your
     ISPConfig set it as you wish. It will also set the name of the root user in the MariaDB Setup. 
         * Default: `root`
     * `mysql_root_password`: (Optional) Password of the root user, please choose a secure one. Even if your database 
     isn't exposed. If no password is set a password will be generated and printed at the end of role execution.   
-    * `mysql_ispconfig_user`: User which will be created inside the MySQL database.
+    * `mysql_ispconfig_user`: (Optional) User which will be created inside the MySQL database.
         * Default: `ISPConfig`
     * `mysql_ispconfig_password`: (Optional) Login for MySQL. If no password is set a password will be generated and 
     printed at the end of role execution.    
@@ -67,7 +67,7 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
 * `certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
     * `admin_email`: Used for Let's Encrypt's CA authorization.
     * `create_standalone_stop_services`: List of services that should be stopped while certbot creates certificates.
-    * `install_from_source`: Set this to true or yes if you want the certbot installation from source instead.
+    * `install_from_source`: (Optional) Set this to true or yes if you want the certbot installation from source instead.
     * `certs`: A list of domains for which certificates will be created.
         * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
         a new `domains` entry (see example playbook).
@@ -75,7 +75,7 @@ You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/maste
         You should insert commands for creating soft links to the certificates for your used technologies. See example
         playbook for examples for ftp and mail.
         * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
-    * `staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
+    * `staging`: (Optional) Set this variable to true or yes to create test certificates. This is useful if you have to 
     run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
     delay.  
    
