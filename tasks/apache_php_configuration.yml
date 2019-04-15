@@ -33,7 +33,7 @@
   debconf:
     name: phpmyadmin
     question: phpmyadmin/mysql/admin-pass
-    value: '{{ phpmyadmin_admin_password }}'
+    value: '{{ ispconfig_mysql_root_password }}'
     vtype: string
 
 - name: Set default webserver to install phpmyadmin without questions
