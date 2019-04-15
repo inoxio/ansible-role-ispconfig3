@@ -21,6 +21,12 @@
     chdir: /tmp/ispconfig3_install/install/
   when: not ispconfig_installed.stat.exists
 
+- name: Insert servername to ISPConfig vhost
+  lineinfile:
+    dest: /etc/apache2/sites-available/ispconfig.vhost
+    line: "  ServerName {{ ispconfig_hostname }}"
+    insertafter: "^\\s*ServerAdmin webmaster@localhost$"
+
 - name: Restart apache
   service:
     name: apache2
