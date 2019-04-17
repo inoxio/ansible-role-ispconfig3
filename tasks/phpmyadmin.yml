@@ -14,6 +14,6 @@
 - name: Enable phpmyadmin apache vhost
   file:
     src: /etc/apache2/sites-available/phpmyadmin.vhost
-    dest: /etc/apache2/sites-enabled/phpmyadmin.vhost
+    dest: /etc/apache2/sites-enabled/000-phpmyadmin.vhost
     state: link
   when: phpmyadmin_stat_result.stat.exists == true

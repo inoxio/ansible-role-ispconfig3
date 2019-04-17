@@ -16,11 +16,25 @@
       - php{{ php_version }}-imap
       - php{{ php_version }}-mysql
 
+- name: Remove apache default vhost
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/apache2/sites-available/000-default.conf
+    - /etc/apache2/sites-enabled/000-default.conf
+
 - name: Setup default http-vhost to serve well-known acme challenge
   copy:
-    src: files/etc/apache2/sites-available/999-default.vhost
-    dest: /etc/apache2/sites-available/999-default.vhost
+    src: files/etc/apache2/sites-available/default.vhost
+    dest: /etc/apache2/sites-available/default.vhost
     mode: 0644
+
+- name: Enable default http-vhost to serve well-known acme challenge
+  file:
+    src: /etc/apache2/sites-available/default.vhost
+    dest: /etc/apache2/sites-enabled/999-default.vhost
+    state: link
 
 - name: Set default admin user to install phpmyadmin without questions
   debconf:
