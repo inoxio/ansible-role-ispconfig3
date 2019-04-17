@@ -14,7 +14,7 @@ Requirements
 Dependencies
 ------------
 
-- geerlingguy.certbot
+- geerlingguy.certbot (Certbot also requires git)
 
 Role Variables
 --------------

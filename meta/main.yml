@@ -28,5 +28,12 @@ galaxy_info:
     - ispconfig
 
 dependencies:
+  - role: oefenweb.apt
+    apt_dependencies:
+      - python3-apt
+    apt_upgrade: false
+    apt_install:
+      - git
   - role: geerlingguy.certbot
     certbot_install_from_source: yes
+
