@@ -1,47 +1,130 @@
 ---
-- name: Set if the db should be configured with dbconfig-common
-  debconf:
-    name: roundcube-core
-    question: roundcube/dbconfig-install
-    value: true
-    vtype: boolean
 
 - name: Set roundcube database-type
   debconf:
     name: roundcube-core
     question: roundcube/database-type
-    value: 'mysql'
-    vtype: multiselect
+    value: 'sqlite3'
+    vtype: select
 
-
-- name: Set roundcube mysql-app-password
+- name: Set roundcube database path
   debconf:
     name: roundcube-core
-    question: roundcube/mysql/app-pass
-    value: '{{ roundcube_admin_password }}'
-    vtype: password
+    question: roundcube/db/basepath
+    value: '/var/lib/roundcube-db/'
+    vtype: string
 
-- name: Confirm roundcube mysql-app-password
-  debconf:
-    name: roundcube-core
-    question: roundcube/app-password-confirm
-    value: '{{ roundcube_admin_password }}'
-    vtype: password
-
-
-- name: Set roundcube database-name
+- name: Set roundcube database name
   debconf:
     name: roundcube-core
     question: roundcube/db/dbname
     value: 'roundcube'
     vtype: string
 
+- name: Set if dbconfig install should be executed
+  debconf:
+    name: roundcube-core
+    question: roundcube/dbconfig-install
+    value: true
+    vtype: boolean
+
+- name: Set if dbconfig reinstall should be executed
+  debconf:
+    name: roundcube-core
+    question: roundcube/dbconfig-reinstall
+    value: true
+    vtype: boolean
+
+- name: Set if dbconfig remove should be executed
+  debconf:
+    name: roundcube-core
+    question: roundcube/dbconfig-remove
+    value: true
+    vtype: boolean
+
+- name: Set if dbconfig upgrade should be executed
+  debconf:
+    name: roundcube-core
+    question: roundcube/dbconfig-upgrade
+    value: true
+    vtype: boolean
+
 - name: Set roundcube host
   debconf:
     name: roundcube-core
     question: roundcube/hosts
-    value: 'localhost'
+    value: 'ssl://localhost:993'
     vtype: string
+
+- name: Set if dbconfig install error should be activated
+  debconf:
+    name: roundcube-core
+    question: roundcube/install-error
+    value: 'abort'
+    vtype: select
+
+- name: Set if preseed should be skipped
+  debconf:
+    name: roundcube-core
+    question: roundcube/internal/skip-preseed
+    value: true
+    vtype: boolean
+
+- name: Set roundcube language
+  debconf:
+    name: roundcube-core
+    question: roundcube/language
+    value: 'de_DE'
+    vtype: select
+
+- name: Set if dbconfig missing-db-package-error activated
+  debconf:
+    name: roundcube-core
+    question: roundcube/missing-db-package-error
+    value: 'abort'
+    vtype: select
+
+- name: Set if roundcube purge should be executed
+  debconf:
+    name: roundcube-core
+    question: roundcube/purge
+    value: false
+    vtype: boolean
+
+- name: Set if webserver should be reconfigured
+  debconf:
+    name: roundcube-core
+    question: roundcube/reconfigure-webserver
+    value: 'apache2'
+    vtype: multiselect
+
+- name: Set if remove error should be activated
+  debconf:
+    name: roundcube-core
+    question: roundcube/remove-error
+    value: 'abort'
+    vtype: select
+
+- name: Set if webserver should be restarted
+  debconf:
+    name: roundcube-core
+    question: roundcube/restart-webserver
+    value: true
+    vtype: boolean
+
+- name: Set if an backup should be made before upgrade
+  debconf:
+    name: roundcube-core
+    question: roundcube/upgrade-backup
+    value: true
+    vtype: boolean
+
+- name: Set if upgrade-error should be set
+  debconf:
+    name: roundcube-core
+    question: roundcube/upgrade-error
+    value: 'abort'
+    vtype: select
 
 - name: Install required software for roundcube
   apt:
@@ -52,7 +135,7 @@
     packages:
       - roundcube
       - roundcube-core
-      - roundcube-mysql
+      - roundcube-sqlite3
       - roundcube-plugins
       - javascript-common
       - libjs-jquery-mousewheel
