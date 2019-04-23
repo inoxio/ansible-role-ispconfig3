@@ -137,6 +137,7 @@ password will be generated and printed at the end of role execution.
     * Default: `no`
 * `ispconfig_reconfigure_crontab`: Configures cronjob.
     * Default: `yes`
+* `ispconfig_configure_webserver`: Configures the webserver.
  
 * `certbot_dir`:  Defines the path where certbot will be installed.
     * Default: `/opt/certbot`      
