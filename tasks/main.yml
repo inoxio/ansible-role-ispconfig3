@@ -124,8 +124,10 @@
   loop_control:
     loop_var: cert_item
 
-#----------------Configure Apache VHost PHPMyadmin----------------------------
+#----------------Configure Apache VHosts ----------------------------
 - include_tasks: phpmyadmin.yml
+
+- include_tasks: configure_roundcube.yml
 
 - include_tasks: cleanup.yml
 

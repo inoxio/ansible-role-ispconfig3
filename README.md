@@ -62,6 +62,8 @@ printed at the end of role execution.
 password will be generated and printed at the end of role execution.
 * `ispconfig_hostname`: Name of the ISPConfig host.
 
+* `roundcube_hostname`: Name of the roundcube host
+
 * `quota_mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
 
 `certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
@@ -177,6 +179,7 @@ This shows an example how you could configure your playbook.
       mail_admin_email: email@your-company.com
       mail_base_domain: your-company.com
       ispconfig_hostname: ispconfig.your-company.com
+      roundcube_hostname: mail.your-company.de
       certbot_admin_email: certificate@your-company.com
       certbot_certs:
         - domains:
