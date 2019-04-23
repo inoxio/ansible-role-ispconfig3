@@ -3,7 +3,7 @@
   debconf:
     name: mailman
     question: mailman/site_languages
-    value: {{ language[:2] }}
+    value: "{{ language[:2] }}"
     vtype: multiselect
 
 - name: Set default queue_files_present to install mailman without questions
@@ -24,7 +24,7 @@
   debconf:
     name: mailman
     question: mailman/default_server_language
-    value: {{ language[:2] }}
+    value: "{{ language[:2] }}"
     vtype: select
 
 - name: Set default create_site_list to install mailman without questions
