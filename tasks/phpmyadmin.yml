@@ -8,7 +8,7 @@
 
 - name: Check that phpmyadmin cert is present
   stat:
-    path: /etc/letsencrypt/live/{{ phpmyadmin_domain }}/fullchain.pem
+    path: /etc/letsencrypt/live/{{ phpmyadmin_hostname }}/fullchain.pem
   register: phpmyadmin_stat_result
 
 - name: Enable phpmyadmin apache vhost

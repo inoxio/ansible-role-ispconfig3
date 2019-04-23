@@ -44,7 +44,7 @@ automatically create a mailing list with the given Parameters.
 
 * `phpmyadmin_admin_password`: (Optional) Password for Admin Login in PHPMyadmin. If no password is set a password will be 
 generated and printed at the end of role execution.
-* `phpmyadmin_domain`: Base domain for phpmyadmin.
+* `phpmyadmin_hostname`: Base domain for phpmyadmin.
 
 * `roundcube_admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
     will be created and printed at the end of role execution.

@@ -7,13 +7,18 @@
   debug:
     msg: "{{ mail_base_domain }}"
 
-- name: Check if phpmyadmin_domain is given in playbook
+- name: Check if phpmyadmin_hostname is given in playbook
   debug:
-    msg: "{{ phpmyadmin_domain }}"
+    msg: "{{ phpmyadmin_hostname }}"
 
 - name: Check if ispconfig_hostname is given in playbook
   debug:
     msg: "{{ ispconfig_hostname }}"
+
+- name: Check if ispconfig_mysql_master_root_password is given in playbook
+  debug:
+    msg: "{{ ispconfig_mysql_master_root_password }}"
+  when: ispconfig_join_multiserver_setup and "ChangeMe" in ispconfig_mysql_master_root_password
 
 - name: Check if certbot_admin_email is given in playbook
   debug:
