@@ -17,7 +17,7 @@ ispconfig_create_new_ispconfig_ssl_cert: no
 ispconfig_do_backup: yes
 ispconfig_http_server: apache
 ispconfig_install_ispconfig_web_interface: y
-ispconfig_install_mode: standard
+ispconfig_install_mode: expert
 ispconfig_ispconfig_port: 8080
 ispconfig_ispconfig_use_ssl: y
 ispconfig_join_multiserver_setup: n
