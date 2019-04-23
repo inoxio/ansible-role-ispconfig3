@@ -77,12 +77,12 @@ password will be generated and printed at the end of role execution.
  
    
 [**Default**](defaults/main.yml) variables:
+* `language`: System wide language
+
 * `mailing_list_name`:
     Sets the mailman List. It is recommended to set it as Mailman (see example playbook).
     * Default: `Mailman` 
     
-* `ispconfig_language`: Set the language your ISPConfig should have.
-    * Default: `en`
 * `ispconfig_install_mode`: Set the mode you want to have if you just want to install it regularly it is recommended to use the default.
     * Default: `standard`
 * `ispconfig_hostname`: This is used for your FQDN where you can set your sitename.

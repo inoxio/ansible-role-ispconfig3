@@ -3,7 +3,7 @@
   debconf:
     name: mailman
     question: mailman/site_languages
-    value: en
+    value: {{ language[:2] }}
     vtype: multiselect
 
 - name: Set default queue_files_present to install mailman without questions
@@ -17,14 +17,14 @@
   debconf:
     name: mailman
     question: mailman/used_languages
-    value: 'en'
+    value: '{{ language[:2] }}'
     vtype: string
 
 - name: Set default default_server_language to install mailman without questions
   debconf:
     name: mailman
     question: mailman/default_server_language
-    value: en
+    value: {{ language[:2] }}
     vtype: select
 
 - name: Set default create_site_list to install mailman without questions
@@ -91,7 +91,7 @@
   command: 'a2enconf mailman'
   when: not mailman_result.stat.exists
 
-- name: restart apache2
+- name: Restart apache2
   service:
     name: apache2
     state: restarted

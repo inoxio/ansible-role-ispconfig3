@@ -1,4 +1,7 @@
 ---
+# General Settings
+language: en_US
+
 # Mail
 mailing_list_name: Mailman
 
@@ -18,7 +21,6 @@ ispconfig_install_mode: standard
 ispconfig_ispconfig_port: 8080
 ispconfig_ispconfig_use_ssl: y
 ispconfig_join_multiserver_setup: n
-ispconfig_language: de
 ispconfig_mysql_charset: utf8
 ispconfig_mysql_database: dbispconfig
 ispconfig_mysql_hostname: localhost
