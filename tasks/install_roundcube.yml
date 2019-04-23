@@ -78,9 +78,6 @@
       - php-net-sieve
       - tinymce
 
--name: Run dbkg-reconfigure
- command: d
-
 - name: add new alias roundcube
   lineinfile:
     path: /etc/apache2/conf-enabled/roundcube.conf
