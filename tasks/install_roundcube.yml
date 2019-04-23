@@ -78,12 +78,12 @@
       - php-net-sieve
       - tinymce
 
-- name: add new alias roundcube
+- name: Add new alias roundcube
   lineinfile:
     path: /etc/apache2/conf-enabled/roundcube.conf
     line: 'Alias /roundcube /var/lib/roundcube'
 
-- name: add new alias webmail
+- name: Add new alias webmail
   lineinfile:
     path: /etc/apache2/conf-enabled/roundcube.conf
     line: 'Alias /webmail /var/lib/roundcube'
