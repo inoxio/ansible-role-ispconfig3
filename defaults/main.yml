@@ -27,6 +27,7 @@ ispconfig_mysql_hostname: localhost
 ispconfig_mysql_ispconfig_user: ispconfig
 ispconfig_mysql_master_database: dbispconfig
 ispconfig_mysql_master_hostname: localhost
+ispconfig_mysql_master_root_password: ChangeMe
 ispconfig_mysql_port: 3306
 ispconfig_mysql_root_user: root
 ispconfig_reconfigure_crontab: yes
