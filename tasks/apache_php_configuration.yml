@@ -7,79 +7,31 @@
   vars:
     packages:
       - apache2
-      - apache2-doc
-      - apache2-utils
-      - libapache2-mod-php
-      - php{{ php_version }}
-      - php{{ php_version }}-common
-      - php{{ php_version }}-gd
-      - php{{ php_version }}-imap
-      - php{{ php_version }}-mysql
-
-- name: Remove apache default vhost
-  file:
-    path: '{{ item }}'
-    state: absent
-  with_items:
-    - /etc/apache2/sites-available/000-default.conf
-    - /etc/apache2/sites-enabled/000-default.conf
-
-- name: Setup default http-vhost to serve well-known acme challenge
-  copy:
-    src: files/etc/apache2/sites-available/default.vhost
-    dest: /etc/apache2/sites-available/default.vhost
-    mode: 0644
-
-- name: Enable default http-vhost to serve well-known acme challenge
-  file:
-    src: /etc/apache2/sites-available/default.vhost
-    dest: /etc/apache2/sites-enabled/999-default.vhost
-    state: link
-
-- name: Set default admin user to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/mysql/admin-user
-    value: 'root'
-    vtype: string
-
-- name: Set default admin password to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/mysql/admin-pass
-    value: '{{ ispconfig_mysql_root_password }}'
-    vtype: string
-
-- name: Set default webserver to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/reconfigure-websever
-    value: 'apache2'
-    vtype: multiselect
-
-- name: Install required software for Apache
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
       - apache2-suexec-pristine
+      - apache2-utils
       - imagemagick
       - libapache2-mod-fcgid
+      - libapache2-mod-php
       - mcrypt
       - memcached
+      - php-apcu
       - php-gettext
       - php-imagick
       - php-memcache
       - php-pear
       - php-soap
-      - phpmyadmin
+      - php{{ php_version }}
       - php{{ php_version }}-cgi
       - php{{ php_version }}-cli
+      - php{{ php_version }}-common
       - php{{ php_version }}-curl
+      - php{{ php_version }}-fpm
+      - php{{ php_version }}-gd
+      - php{{ php_version }}-imap
       - php{{ php_version }}-intl
       - php{{ php_version }}-mbstring
+      - php{{ php_version }}-mysql
+      - php{{ php_version }}-opcache
       - php{{ php_version }}-pspell
       - php{{ php_version }}-recode
       - php{{ php_version }}-soap
@@ -90,6 +42,45 @@
       - php{{ php_version }}-zip
 
 # ----------------Configure apache----------------
+- name: Remove apache default vhost
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/apache2/sites-available/000-default.conf
+    - /etc/apache2/sites-enabled/000-default.conf
+
+- name: Setup default apache vhost
+  copy:
+    src: files/etc/apache2/sites-available/default.vhost
+    dest: /etc/apache2/sites-available/default.vhost
+    mode: 0644
+
+- name: Enable default apache vhost
+  file:
+    src: /etc/apache2/sites-available/default.vhost
+    dest: /etc/apache2/sites-enabled/999-default.vhost
+    state: link
+
+- name: Setup letsencrypt config
+  copy:
+    src: files/etc/apache2/conf-available/letsencrypt.conf
+    dest: /etc/apache2/conf-available/letsencrypt.conf
+    mode: 0644
+
+- name: Enable letsencrypt config
+  command: 'a2enconf letsencrypt'
+
+- name: Create letsencrypt wellknown-directory
+  command: mkdir --parents /var/www/letsencrypt
+  args:
+    creates: /var/www/letsencrypt
+
+- name: Make sure wellknown directory stays
+  command: touch /var/www/letsencrypt/.keep
+  args:
+    creates: /var/www/letsencrypt/.keep
+
 - name: Enable apache modules
   apache2_module:
     state: present
@@ -97,6 +88,7 @@
   with_items:
     - actions
     - include
+    - proxy_fcgi
     - rewrite
     - ssl
     - suexec
@@ -139,31 +131,6 @@
     path: /etc/mime.types
     regexp: '^(.*application/x-ruby.*rb)$'
     replace: '#\1'
-
-# ----------------Configure php----------------
-- name: Install packages for php opcode
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
-      - php{{ php_version }}-opcache
-      - php-apcu
-
-- name: Install php{{ php_version }}-fpm
-  apt:
-    name: php{{ php_version }}-fpm
-    state: present
-
-- name: Enable proxy_fcgi module
-  apache2_module:
-    state: present
-    name: '{{ item }}'
-  with_items:
-    - actions
-    - alias
-    - proxy_fcgi
 
 # ----------------Restart apache----------------
 - name: Restart apache

@@ -1,21 +1,4 @@
 <VirtualHost *:80>
-  Alias /.well-known/acme-challenge/ /var/www/.well-known/acme-challenge/
-
-  <Directory /var/www/.acme-challenges>
-    Options None
-    AllowOverride None
-
-    # Apache 2.x
-    <IfModule !mod_authz_core.c>
-            Order allow,deny
-            Allow from all
-    </IfModule>
-
-    # Apache 2.4
-    <IfModule mod_authz_core.c>
-            Require all granted
-    </IfModule>
-  </Directory>
 
   ServerSignature Off
 </VirtualHost>
