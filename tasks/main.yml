@@ -91,6 +91,12 @@
 # ----------------Install and configure php and apache---------
 - include_tasks: apache_php_configuration.yml
 
+#----------------Create certificates----------------------------
+- include_tasks: issue_certificates.yml
+  with_items: "{{ certbot_certs }}"
+  loop_control:
+    loop_var: cert_item
+
 # ----------------Install and configure pureftp_quota----------
 - include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
 
@@ -112,22 +118,14 @@
 #----------------Install fail2ban ufw---------------------------
 - include_tasks: install_fail2ban_ufw.yml
 
+#----------------Install and configure PHP MyAdmin----------------------------
+- include_tasks: install_phpmyadmin.yml
+
 #----------------Install and configure roundcube----------------
 - include_tasks: install_roundcube.yml
 
 #----------------Install and configure ispconfig----------------
 - include_tasks: install_ispconfig.yml
-
-#----------------Create certificates----------------------------
-- include_tasks: create-certificates.yml
-  with_items: "{{ certbot_certs }}"
-  loop_control:
-    loop_var: cert_item
-
-#----------------Configure Apache VHosts ----------------------------
-- include_tasks: phpmyadmin.yml
-
-- include_tasks: configure_roundcube.yml
 
 - include_tasks: cleanup.yml
 

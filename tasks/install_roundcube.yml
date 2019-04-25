@@ -78,23 +78,31 @@
       - php-net-sieve
       - tinymce
 
-- name: Add new alias roundcube
-  lineinfile:
-    path: /etc/apache2/conf-enabled/roundcube.conf
-    line: 'Alias /roundcube /var/lib/roundcube'
-
-- name: Add new alias webmail
-  lineinfile:
-    path: /etc/apache2/conf-enabled/roundcube.conf
-    line: 'Alias /webmail /var/lib/roundcube'
-
-- name: Restart apache2
-  service:
-    name: apache2
-    state: restarted
-
+# ----------------Configure roundcube----------
 - name: Replace localhost entry in config.inc,php
   replace:
     path: /etc/roundcube/config.inc.php
     regexp: "^config['default_host'] ="
     replace: "config['default_host'] = 'localhost';"
+
+- name: Copy roundcube vhost
+  template:
+    src: files/etc/apache2/sites-available/roundcube.vhost.j2
+    dest: /etc/apache2/sites-available/roundcube.vhost
+
+- name: Check that roundcube cert is present
+  stat:
+    path: /etc/letsencrypt/live/{{ roundcube_hostname }}/fullchain.pem
+  register: roundcube_stat_result
+
+- name: Enable roundcube vhost
+  file:
+    src: /etc/apache2/sites-available/roundcube.vhost
+    dest: /etc/apache2/sites-enabled/000-roundcube.vhost
+    state: link
+  when: roundcube_stat_result.stat.exists == true
+
+- name: Restart apache2
+  service:
+    name: apache2
+    state: restarted

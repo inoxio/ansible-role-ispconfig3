@@ -1,0 +1,49 @@
+---
+
+- name: Set default admin user to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/admin-user
+    value: 'root'
+    vtype: string
+
+- name: Set default admin password to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/admin-pass
+    value: '{{ ispconfig_mysql_root_password }}'
+    vtype: string
+
+- name: Set default webserver to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/reconfigure-websever
+    value: 'apache2'
+    vtype: multiselect
+
+- name: Install required software for Apache
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - phpmyadmin
+
+# ----------------Configure phpmyadmin----------
+- name: Copy phpmyadmin apache vhost
+  template:
+    src: files/etc/apache2/sites-available/phpmyadmin.vhost.j2
+    dest: /etc/apache2/sites-available/phpmyadmin.vhost
+
+- name: Check that phpmyadmin cert is present
+  stat:
+    path: /etc/letsencrypt/live/{{ phpmyadmin_hostname }}/fullchain.pem
+  register: phpmyadmin_stat_result
+
+- name: Enable phpmyadmin apache vhost
+  file:
+    src: /etc/apache2/sites-available/phpmyadmin.vhost
+    dest: /etc/apache2/sites-enabled/000-phpmyadmin.vhost
+    state: link
+  when: phpmyadmin_stat_result.stat.exists == true
