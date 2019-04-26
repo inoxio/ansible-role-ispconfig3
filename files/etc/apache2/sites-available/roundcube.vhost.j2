@@ -13,9 +13,8 @@
   DocumentRoot /var/lib/roundcube
 
   SSLEngine On
-  SSLCertificateFile /etc/letsencrypt/live/{{ roundcube_hostname }}/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/{{ roundcube_hostname }}/privkey.pem
-  SSLCertificateChainFile /etc/letsencrypt/live/{{ roundcube_hostname }}/chain.pem
+  SSLCertificateFile /etc/apache2/certs/{{ roundcube_hostname }}/fullchain.pem
+  SSLCertificateKeyFile /etc/apache2/certs/{{ roundcube_hostname }}/privkey.pem
 
   ErrorLog /var/log/apache2/{{ roundcube_hostname }}_error.log
   CustomLog /var/log/apache2/{{ roundcube_hostname }}_access.log combined

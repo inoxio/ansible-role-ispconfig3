@@ -95,12 +95,6 @@
 # ----------------Install and configure php and apache---------
 - include_tasks: apache_php_configuration.yml
 
-#----------------Create certificates----------------------------
-- include_tasks: issue_certificates.yml
-  with_items: "{{ certbot_certs }}"
-  loop_control:
-    loop_var: cert_item
-
 # ----------------Install and configure pureftp_quota----------
 - include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
 
@@ -130,6 +124,12 @@
 
 #----------------Install and configure ispconfig----------------
 - include_tasks: install_ispconfig.yml
+
+#----------------Create certificates----------------------------
+- include_tasks: issue_certificates.yml
+  with_items: "{{ certbot_certs }}"
+  loop_control:
+    loop_var: cert_item
 
 - include_tasks: cleanup.yml
 

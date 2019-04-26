@@ -45,19 +45,45 @@
       - phpmyadmin
 
 # ----------------Configure phpmyadmin----------
+- name: Create directory for ssl certificate
+  file:
+    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}
+    state: directory
+
+- name: Check if SSL certificate was created already
+  stat:
+    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
+  register: phpmyadmin_cert
+
+- name: Generate temporary SSL certificate
+  command: openssl req
+    -x509
+    -nodes
+    -days 30
+    -newkey rsa:2048
+    -keyout /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
+    -out /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
+    -subj "/C=US/ST=DummyState/L=DummyTown/O=DummyCompany/OU=Software/CN=dummy-company.com"
+  when: not phpmyadmin_cert.stat.exists
+
+- name: Change permission of temporary SSL Key file
+  file:
+    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
+    mode: u=rw,g=,o=
+  when: not phpmyadmin_cert.stat.exists
+
 - name: Copy phpmyadmin apache vhost
   template:
     src: files/etc/apache2/sites-available/phpmyadmin.vhost.j2
     dest: /etc/apache2/sites-available/phpmyadmin.vhost
-
-- name: Check that phpmyadmin cert is present
-  stat:
-    path: /etc/letsencrypt/live/{{ phpmyadmin_hostname }}/fullchain.pem
-  register: phpmyadmin_stat_result
 
 - name: Enable phpmyadmin apache vhost
   file:
     src: /etc/apache2/sites-available/phpmyadmin.vhost
     dest: /etc/apache2/sites-enabled/000-phpmyadmin.vhost
     state: link
-  when: phpmyadmin_stat_result.stat.exists == true
+
+- name: Restart apache2
+  service:
+    name: apache2
+    state: restarted
