@@ -12,7 +12,21 @@
     name: phpmyadmin
     question: phpmyadmin/mysql/admin-pass
     value: '{{ ispconfig_mysql_root_password }}'
-    vtype: string
+    vtype: password
+
+- name: Set default app_db password to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/mysql/app-pass
+    value: '{{ phpmyadmin_user_password }}'
+    vtype: password
+
+- name: Set confirmation app_db  password to install phpmyadmin without questions
+  debconf:
+    name: phpmyadmin
+    question:  phpmyadmin/app-password-confirm
+    value: '{{ phpmyadmin_user_password }}'
+    vtype: password
 
 - name: Set default webserver to install phpmyadmin without questions
   debconf:
