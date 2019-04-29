@@ -332,7 +332,7 @@ for this test scenario.
              ***
 
 
-Author Information
+Molecule
 ------------------
 
 This section will contain a conclusion about Molecule because this was the first setup of it. 
