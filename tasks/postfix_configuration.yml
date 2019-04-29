@@ -1,4 +1,10 @@
 ---
+- name: Uncomment submission inet
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(submission.*inet .*)$'
+    replace: '\1'
+
 - name: Uncomment -o syslog_name=postfix/submission
   replace:
     path: /etc/postfix/master.cf
@@ -24,6 +30,12 @@
     replace: '  -o smtpd_client_restrictions=permit_sasl_authenticated,reject'
 
 # Smtps
+- name: Uncomment smtps inet
+  replace:
+    path: /etc/postfix/master.cf
+    regexp: '^#(smtps.*inet.*)$'
+    replace: '\1'
+
 - name: Uncomment -o syslog_name=postfix/smtps
   replace:
     path: /etc/postfix/master.cf
