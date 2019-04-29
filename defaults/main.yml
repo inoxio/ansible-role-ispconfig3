@@ -43,7 +43,7 @@ certbot_create_command: >-
   --agree-tos
   --email {{ cert_item.email | default(certbot_admin_email) }}
   -d {{ cert_item.domains | join(',') }}
-  --post-hook "{{ ''~cert_item.post_hook | join('; ')~'; ' if cert_item.post_hook is defined else '' }}service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
+  --post-hook "{{ ''~cert_item.post_hook | join('; ')~'; ' if cert_item.post_hook is defined else '' }}for i in {{ cert_item.services | default(certbot_default_service) | join(' ') }};do service $i reload;done  "
   --webroot-path /var/www/letsencrypt
 certbot_dir: /opt/certbot
 certbot_default_service:
