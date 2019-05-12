@@ -80,7 +80,7 @@
 - name: Enable phpmyadmin apache vhost
   file:
     src: /etc/apache2/sites-available/phpmyadmin.vhost
-    dest: /etc/apache2/sites-enabled/000-phpmyadmin.vhost
+    dest: /etc/apache2/sites-enabled/phpmyadmin.vhost
     state: link
 
 - name: Restart apache2

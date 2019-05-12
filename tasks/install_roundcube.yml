@@ -120,7 +120,7 @@
 - name: Enable roundcube apache vhost
   file:
     src: /etc/apache2/sites-available/roundcube.vhost
-    dest: /etc/apache2/sites-enabled/000-roundcube.vhost
+    dest: /etc/apache2/sites-enabled/roundcube.vhost
     state: link
 
 - name: Restart apache2
