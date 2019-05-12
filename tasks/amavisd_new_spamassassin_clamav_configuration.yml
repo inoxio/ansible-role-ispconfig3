@@ -47,19 +47,23 @@
 # ERROR: /var/log/clamav/freshclam.log is locked by another process
 # ERROR: Problem with internal logger (UpdateLogFile = /var/log/clamav/freshclam.log).
 
-- name: Download ispconfig patch
-  get_url:
-    url: https://git.ispconfig.org/ispconfig/ispconfig3/raw/stable-{{ ispconfig_patch }}/helper_scripts/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
-    dest: /tmp
+# According to this https://bugs.launchpad.net/ubuntu/+source/amavisd-new/+bug/1770532
+# The bug has been fixed in the package amavisd-new - 1:2.11.0-1ubuntu1.1
+# which we are installing at the moment.
 
-
-- name: Apply isp config patch
-  patch:
-    src: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
-    basedir: /usr/sbin
-    remote_src: yes
-
-- name: Delete Patch
-  file:
-    path: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
-    state: absent
+#- name: Download ispconfig patch
+#  get_url:
+#    url: https://git.ispconfig.org/ispconfig/ispconfig3/raw/stable-{{ ispconfig_patch }}/helper_scripts/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+#    dest: /tmp
+#
+#
+#- name: Apply isp config patch
+#  patch:
+#    src: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+#    basedir: /usr/sbin
+#    remote_src: yes
+#
+#- name: Delete Patch
+#  file:
+#    path: /tmp/ubuntu-amavisd-new-{{ ispconfig_patch_version }}.patch
+#    state: absent
