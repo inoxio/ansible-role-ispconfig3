@@ -83,6 +83,11 @@
     dest: /etc/apache2/sites-enabled/phpmyadmin.vhost
     state: link
 
+- name: Fix bug https://stackoverflow.com/questions/48001569/phpmyadmin-count-parameter-must-be-an-array-or-an-object-that-implements-co
+  patch:
+    src: files/patch/phpmyadmin.patch
+    dest: /usr/share/phpmyadmin/libraries/sql.lib.php
+
 - name: Restart apache2
   service:
     name: apache2

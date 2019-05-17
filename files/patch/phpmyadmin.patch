@@ -1,0 +1,12 @@
+--- sql.lib.php	2017-01-23 20:20:26.000000000 +0100
++++ sql.lib_new.php	2019-05-17 14:56:39.224935022 +0200
+@@ -610,8 +610,8 @@
+             || $analyzed_sql_results['is_analyse'])
+         && $analyzed_sql_results['select_from']
+         && ((empty($analyzed_sql_results['select_expr']))
+-            || (count($analyzed_sql_results['select_expr'] == 1)
+-                && ($analyzed_sql_results['select_expr'][0] == '*')))
++            || (count($analyzed_sql_results['select_expr']) == 1)
++                && ($analyzed_sql_results['select_expr'][0] == '*'))
+         && count($analyzed_sql_results['select_tables']) == 1;
+ }
