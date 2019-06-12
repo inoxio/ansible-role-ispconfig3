@@ -40,6 +40,8 @@
       - sudo
       - python3-mysqldb
       - python-mysqldb
+      - ruby-dev
+      - bundler
 
 - name: Install pip
   apt:
