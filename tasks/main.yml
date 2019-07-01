@@ -29,11 +29,6 @@
       mail_admin_password: "{{ mail_admin_password |
                     default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
 
-- name: Generate phpmyadmin password
-  set_fact:
-      phpmyadmin_admin_password: "{{ phpmyadmin_admin_password |
-                    default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
-
 - name: Generate roundcube password
   set_fact:
       roundcube_admin_password: "{{ roundcube_admin_password |
@@ -137,8 +132,6 @@
   debug:
     msg:
       - "mail_admin_password: {{ mail_admin_password | default(mail_admin_password) }}"
-      - "phpmyadmin_admin_password: {{ phpmyadmin_admin_password if phpmyadmin is defined
-                                      else phpmyadmin_admin_password }}"
       - "roundcube_admin_password: {{ roundcube_admin_password if roundcube is defined
                                       else roundcube_admin_password }}"
       - "ispconfig_admin_password: {{ ispconfig_ispconfig_admin_password | default(ispconfig_admin_password) }}"
