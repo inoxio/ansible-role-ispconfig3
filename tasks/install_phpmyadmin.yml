@@ -45,17 +45,17 @@
       - phpmyadmin
 
 # ----------------Configure phpmyadmin----------
-- name: Create directory for ssl certificate
+- name: Create directory for phpmyadmin certificate
   file:
     path: /etc/apache2/certs/{{ phpmyadmin_hostname }}
     state: directory
 
-- name: Check if SSL certificate was created already
+- name: Check if SSL certificate for phpmyadmin is present
   stat:
     path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
   register: phpmyadmin_cert
 
-- name: Generate temporary SSL certificate
+- name: Generate temporary phpmyadmin certificate
   command: openssl req
     -x509
     -nodes
@@ -66,7 +66,7 @@
     -subj "/C=US/ST=DummyState/L=DummyTown/O=DummyCompany/OU=Software/CN=dummy-company.com"
   when: not phpmyadmin_cert.stat.exists
 
-- name: Change permission of temporary SSL Key file
+- name: Change permission of temporary phpmyadmin key
   file:
     path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
     mode: u=rw,g=,o=
