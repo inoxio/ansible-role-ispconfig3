@@ -120,12 +120,6 @@
 #----------------Install and configure ispconfig----------------
 - include_tasks: install_ispconfig.yml
 
-#----------------Create certificates----------------------------
-- include_tasks: issue_certificates.yml
-  with_items: "{{ certbot_certs }}"
-  loop_control:
-    loop_var: cert_item
-
 - include_tasks: cleanup.yml
 
 - name: Print all passwords
