@@ -1,0 +1,11 @@
+--- plugin_interface.lib.php	2019-07-20 10:18:00.763591259 +0200
++++ plugin_interface.lib_new.php	2019-07-20 10:17:40.503583003 +0200
+@@ -548,7 +548,7 @@
+         $ret .= '<h3>' . PMA_getString($text) . '</h3>';
+
+         $no_options = true;
+-        if ($options != null && count($options) > 0) {
++        if ($options != null && count((array)$options) > 0) {
+             foreach ($options->getProperties()
+                 as $propertyMainGroup
+             ) {

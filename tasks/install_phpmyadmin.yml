@@ -88,6 +88,11 @@
     src: files/patch/phpmyadmin.patch
     dest: /usr/share/phpmyadmin/libraries/sql.lib.php
 
+- name: Fix bug https://medium.com/@chaloemphonthipkasorn/%E0%B9%81%E0%B8%81%E0%B9%89-bug-phpmyadmin-php7-2-ubuntu-16-04-92b287090b01
+  patch:
+    src: files/patch/phpmyadmin_array.patch
+    dest: /usr/share/phpmyadmin/libraries/plugin_interface.lib.php
+
 - name: Restart apache2
   service:
     name: apache2
