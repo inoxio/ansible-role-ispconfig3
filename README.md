@@ -14,7 +14,7 @@ Requirements
 Dependencies
 ------------
 
-- geerlingguy.certbot (Certbot also requires git)
+- oefenweb.apt
 
 Role Variables
 --------------
