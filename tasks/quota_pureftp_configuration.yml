@@ -34,7 +34,7 @@
 - name: Allow FTP and TLS
   copy:
     dest: /etc/pure-ftpd/conf/TLS
-    content: 1
+    content: 2
 
 - name: Create directory for ssl certificate
   file:
