@@ -90,8 +90,8 @@
 # ----------------Install and configure php and apache---------
 - include_tasks: apache_php_configuration.yml
 
-# ----------------Install and configure pureftp_quota----------
-- include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
+## ----------------Install and configure pureftp_quota----------
+#- include_tasks: amavisd_new_spamassassin_clamav_configuration.yml
 
 # ----------------Install and configure mailman-----------------
 - include_tasks: mailman_configuration.yml
