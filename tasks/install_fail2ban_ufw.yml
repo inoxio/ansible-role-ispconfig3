@@ -7,7 +7,7 @@
 
 - name: Write jail.local
   copy:
-    src: files/etc/fail2ban/config
+    src: files/etc/fail2ban/jail.local
     dest: /etc/fail2ban/jail.local
 
 - name: Restart fail2ban
