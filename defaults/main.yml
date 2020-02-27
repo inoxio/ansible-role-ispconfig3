@@ -35,21 +35,6 @@ ispconfig_reconfigure_permissions_in_master_database: n
 ispconfig_reconfigure_services: yes
 ispconfig_configure_webserver: y
 
-# Certbot
-certbot_create_command: >-
-  {{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot_staging else '' }}
-  --webroot
-  --noninteractive
-  --agree-tos
-  --email {{ cert_item.email | default(certbot_admin_email) }}
-  -d {{ cert_item.domains | join(',') }}
-  --post-hook "{{ ''~cert_item.post_hook | join('; ')~'; ' if cert_item.post_hook is defined else '' }}for i in {{ cert_item.services | default(certbot_default_service) | join(' ') }};do service \$i reload;done  "
-  --webroot-path /var/www/letsencrypt
-certbot_dir: /opt/certbot
-certbot_default_service:
-  - apache2
-certbot_staging: yes
-
 # Quota
 quota_mounts:
   - /

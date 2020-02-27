@@ -26,7 +26,6 @@ ISPConfig is here the most important part, it contains a lot of different variab
 Most of them can be translated into the autoinstall.php from ISPConfig.
 It is also important to notice that the mysql_root_password will be used for the setup 
 of the MariaDB module.  
-This happens to the ssl_cert part too, this will be used as the SSL cert is generated.
 
 **Playbook** variables:
 The following variables are required in the playbook (except the passwords, that will be generated if left out).
@@ -63,17 +62,6 @@ password will be generated and printed at the end of role execution.
 * `roundcube_hostname`: Name of the roundcube host
 
 * `quota_mounts`: Is a list of all directories to be remounted for quota. See section "Quota".
-
-`certbot`: See ReadMe of Geerlinugguys [role](https://galaxy.ansible.com/geerlingguy/certbot) for further information.
-* `certbot_admin_email`: Used for Let's Encrypt's CA authorization.
-* `certbot_certs`: A list of domains for which certificates will be created.
-    * `domains`: A list of domains that get the same certificate. Each domain with its own certificate has to get
-    a new `domains` entry (see example playbook).
-    * `post_hook`: (Optional) This is a list of commands that should be executed after the cert was created.
-    You should insert commands for creating soft links to the certificates for your used technologies. See example
-    playbook for examples for ftp and mail.
-    * `services`: (Optional) This is a list of services that should be restarted when the cert was created.
-        * Default: `apache2`
  
    
 [**Default**](defaults/main.yml) variables:
@@ -138,25 +126,7 @@ password will be generated and printed at the end of role execution.
 * `ispconfig_reconfigure_crontab`: Configures cronjob.
     * Default: `yes`
 * `ispconfig_configure_webserver`: Configures the webserver.
- 
-* `certbot_dir`:  Defines the path where certbot will be installed.
-    * Default: `/opt/certbot`      
-* `certbot_default_service`: List of services that will be restarted when a certificate for a domain was created. The
-service can be overwritten by stating it in the playbook (see Playbook variables).
-    * Default: `apache2`  
-* `certbot_install_from_source`: Set this to true or yes if you want the certbot installation from source instead.
-* `certbot_staging`: Set this variable to true or yes to create test certificates. This is useful if you have to 
-run this role many times on the same IP address, because letsencrypt will queue your request on an ever increasing
-delay.       
-* `certbot_create_command`: Command for creating certificates.
-    * Default: `{{ certbot_dir }}/certbot-auto certonly {{ '--staging' if certbot_staging else '' }}
-      --webroot
-      --noninteractive
-      --agree-tos
-      --email {{ cert_item.email | default(certbot_admin_email) }}
-      -d {{ cert_item.domains | join(',') }}
-      --post-hook "{{ ''~cert_item.post_hook | join('; ')~'; ' if cert_item.post_hook is defined else '' }}service {{ cert_item.services | default(certbot_default_service) | join(' ') }} reload"
-      --webroot-path /var/www`     
+    
          
 * `quota_mounts`:  List of directories that quota will watch over.
     * Default: `/`
@@ -178,30 +148,6 @@ This shows an example how you could configure your playbook.
       mail_base_domain: your-company.com
       ispconfig_hostname: ispconfig.your-company.com
       roundcube_hostname: mail.your-company.de
-      certbot_admin_email: certificate@your-company.com
-      certbot_certs:
-        - domains:
-            - subdomain1.your-company.com
-            - subdomain2.your-company.com
-          post_hook:
-            - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.com/fullchain.pem /usr/local/ispconfig/interface/ssl/ispserver.crt
-            - ln -s -f /etc/letsencrypt/live/subdomain1.your-company.com/privkey.pem /usr/local/ispconfig/interface/ssl/ispserver.key
-        - domains:
-            - ftp.your-company.com
-          post_hook:
-            - cat /etc/letsencrypt/live/ftp.your-company.com/{fullchain,privkey}.pem > /etc/ssl/private/pure-ftpd.pem
-          services:
-            - pureftpd
-        - domains:
-            - mail.your-company.com
-            - imap.your-company.com
-            - pop.your-company.com
-          post_hook:
-            - ln -s -f /etc/letsencrypt/live/your-company/fullchain.pem /etc/postfix/smtpd.cert
-            - ln -s -f /etc/letsencrypt/live/your-company/privkey.pem /etc/postfix/smtpd.key
-          services:
-            - dovecot
-            - postfix
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.

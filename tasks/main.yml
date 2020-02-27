@@ -20,10 +20,6 @@
     msg: "ispconfig_join_multiserver_setup is active and ispconfig_mysql_master_root_password has a default password. Please change it in the playbook."
   when: ispconfig_join_multiserver_setup == "y" and ispconfig_mysql_master_root_password == "ChangeMe"
 
-- name: Check if certbot_admin_email is given in playbook
-  debug:
-    msg: "{{ certbot_admin_email }}"
-
 - name: Generate mail password
   set_fact:
       mail_admin_password: "{{ mail_admin_password |
