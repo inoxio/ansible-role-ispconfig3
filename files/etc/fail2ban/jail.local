@@ -7,7 +7,7 @@ enabled  = true
 port     = ftp
 filter   = pure-ftpd
 logpath  = /var/log/syslog
-maxretry = 3
+maxretry = 5
 bantime  = 259200 # 72h
 
 [dovecot]
@@ -15,13 +15,13 @@ enabled  = true
 filter   = dovecot
 action   = iptables-multiport[name=dovecot-pop3imap, port="pop3,pop3s,imap,imaps", protocol=tcp]
 logpath  = /var/log/mail.log
-maxretry = 5
+maxretry = 15
 bantime  = 259200 # 72h
 
 [postfix]
 enabled  = true
-port     = smtp
+port     = 25,465,587
 filter   = postfix
 logpath  = /var/log/mail.log
-maxretry = 3
+maxretry = 15
 bantime  = 259200 # 72h
