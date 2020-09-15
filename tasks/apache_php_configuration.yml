@@ -1,7 +1,7 @@
 ---
 - name: Add additional repositories
   apt_repository:
-    repo: "{{ add_repositories[0] }}"
+    repo: "{{ php_repository }}"
 
 - name: Install php versions
   apt:

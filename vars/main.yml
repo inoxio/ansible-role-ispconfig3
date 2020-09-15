@@ -3,8 +3,7 @@
 ispconfig_version: '3.1.14p2'
 ispconfig_patch: '3.1'
 ispconfig_patch_version: '2.11'
-add_repositories:
-  - ppa:ondrej/php
+php_repository: 'ppa:ondrej/php'
 php_versions:
   - 7.2
   - 7.3
