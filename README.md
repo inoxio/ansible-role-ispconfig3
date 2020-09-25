@@ -139,6 +139,10 @@ them. If the list is empty quota will not be enabled. You can overwrite this lis
 modules, you have to keep the list empty. This is the case for AWS machines that use the 
 [linux-aws kernel](https://bugs.launchpad.net/ubuntu/+source/linux-aws/+bug/1773172).
 
+Multiple PHP versions 
+------------
+You can specify multiple PHP versions in [vars/main.yml](vars/main.yml), that will be installed.
+
 Example Playbook
 ----------------
 This shows an example how you could configure your playbook.

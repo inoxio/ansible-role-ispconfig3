@@ -1,4 +1,37 @@
 ---
+- name: Add additional repositories
+  apt_repository:
+    repo: "{{ php_repository }}"
+
+- name: Install php versions
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - php{{ item }}
+      - php{{ item }}-cgi
+      - php{{ item }}-cli
+      - php{{ item }}-common
+      - php{{ item }}-curl
+      - php{{ item }}-fpm
+      - php{{ item }}-gd
+      - php{{ item }}-imap
+      - php{{ item }}-intl
+      - php{{ item }}-mbstring
+      - php{{ item }}-mysql
+      - php{{ item }}-opcache
+      - php{{ item }}-pspell
+      - php{{ item }}-recode
+      - php{{ item }}-soap
+      - php{{ item }}-sqlite3
+      - php{{ item }}-tidy
+      - php{{ item }}-xmlrpc
+      - php{{ item }}-xsl
+      - php{{ item }}-zip
+  loop: "{{ php_versions }}"
+
 - name: Install required software for Apache
   apt:
     name: "{{ packages }}"
@@ -20,26 +53,6 @@
       - php-memcache
       - php-pear
       - php-soap
-      - php{{ php_version }}
-      - php{{ php_version }}-cgi
-      - php{{ php_version }}-cli
-      - php{{ php_version }}-common
-      - php{{ php_version }}-curl
-      - php{{ php_version }}-fpm
-      - php{{ php_version }}-gd
-      - php{{ php_version }}-imap
-      - php{{ php_version }}-intl
-      - php{{ php_version }}-mbstring
-      - php{{ php_version }}-mysql
-      - php{{ php_version }}-opcache
-      - php{{ php_version }}-pspell
-      - php{{ php_version }}-recode
-      - php{{ php_version }}-soap
-      - php{{ php_version }}-sqlite3
-      - php{{ php_version }}-tidy
-      - php{{ php_version }}-xmlrpc
-      - php{{ php_version }}-xsl
-      - php{{ php_version }}-zip
 
 # ----------------Configure apache----------------
 - name: Setup letsencrypt config

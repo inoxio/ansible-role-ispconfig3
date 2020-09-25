@@ -3,5 +3,9 @@
 ispconfig_version: '3.1.14p2'
 ispconfig_patch: '3.1'
 ispconfig_patch_version: '2.11'
-php_version: '7.2'
+php_repository: 'ppa:ondrej/php'
+php_versions:
+  - 7.2
+  - 7.3
+  - 7.4
 jailkit_version: '2.20'
