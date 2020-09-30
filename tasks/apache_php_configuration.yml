@@ -23,7 +23,7 @@
       - php{{ item }}-mysql
       - php{{ item }}-opcache
       - php{{ item }}-pspell
-      - php{{ item }}-recode
+#      - php{{ item }}-recode
       - php{{ item }}-soap
       - php{{ item }}-sqlite3
       - php{{ item }}-tidy
