@@ -1,99 +1,72 @@
 ---
 
-- name: Set default admin user to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/mysql/admin-user
-    value: 'root'
-    vtype: string
+- name: Pull images
+  docker_image:
+    name: phpmyadmin:latest
+    force_source: yes
 
-- name: Set default admin password to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/mysql/admin-pass
-    value: '{{ ispconfig_mysql_root_password }}'
-    vtype: password
-
-- name: Set default app_db password to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/mysql/app-pass
-    value: '{{ phpmyadmin_user_password }}'
-    vtype: password
-
-- name: Set confirmation app_db  password to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question:  phpmyadmin/app-password-confirm
-    value: '{{ phpmyadmin_user_password }}'
-    vtype: password
-
-- name: Set default webserver to install phpmyadmin without questions
-  debconf:
-    name: phpmyadmin
-    question: phpmyadmin/reconfigure-websever
-    value: 'apache2'
-    vtype: multiselect
-
-- name: Install required software for Apache
-  apt:
-    name: "{{ packages }}"
+- name: docker-compose via ansible docker_service
+  docker_compose:
+    project_name: "phpmyadmin-services"
+    definition:
+      version: '3'
+      services:
+        phpmyadmin:
+          image: phpmyadmin:latest
+          ports:
+            - 1081:80
+          environment:
+            - "MYSQL_ROOT_PASSWORD={{ ispconfig_mysql_root_password | replace('$','$$') }}"
+            - MYSQL_USER=phpmyadmin
+            - "MYSQL_PASSWORD={{ phpmyadmin_user_password }}"
+            - "PMA_HOST={{ phpmyadmin_hostname }}"
+            - PMA_PORT=3306
+            - "PMA_ABSOLUTE_URI=https://{{ phpmyadmin_hostname }}"
+          restart: always
     state: present
-    update_cache: yes
-  vars:
-    packages:
-      - phpmyadmin
+    restarted: true
 
-# ----------------Configure phpmyadmin----------
-- name: Create directory for phpmyadmin certificate
+# apache2 setup
+
+- name: Create directory for certificate
   file:
-    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}
+    path: "/etc/apache2/certs/{{ phpmyadmin_hostname }}"
     state: directory
 
-- name: Check if SSL certificate for phpmyadmin is present
+- name: Check if SSL certificate is present
   stat:
-    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
-  register: phpmyadmin_cert
+    path: "/etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem"
+  register: letsencrypt_cert
 
-- name: Generate temporary phpmyadmin certificate
+- name: Generate temporary certificate
   command: openssl req
     -x509
     -nodes
     -days 30
     -newkey rsa:2048
-    -keyout /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
-    -out /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
+    -keyout /etc/apache2/certs/"{{ phpmyadmin_hostname }}"/privkey.pem
+    -out /etc/apache2/certs/"{{ phpmyadmin_hostname }}"/fullchain.pem
     -subj "/C=US/ST=DummyState/L=DummyTown/O=DummyCompany/OU=Software/CN=dummy-company.com"
-  when: not phpmyadmin_cert.stat.exists
+  when: not letsencrypt_cert.stat.exists
 
-- name: Change permission of temporary phpmyadmin key
+- name: Change permission of temporary key
   file:
-    path: /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
+    path: "/etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem"
     mode: u=rw,g=,o=
-  when: not phpmyadmin_cert.stat.exists
+  when: not letsencrypt_cert.stat.exists
 
-- name: Copy phpmyadmin apache vhost
+- name: Copy apache vhost
   template:
-    src: files/etc/apache2/sites-available/phpmyadmin.vhost.j2
+    src: templates/sites_available/phpmyadmin.vhost.j2
     dest: /etc/apache2/sites-available/phpmyadmin.vhost
 
-- name: Enable phpmyadmin apache vhost
+- name: Enable apache vhost
   file:
     src: /etc/apache2/sites-available/phpmyadmin.vhost
     dest: /etc/apache2/sites-enabled/phpmyadmin.vhost
     state: link
 
-- name: Fix bug https://stackoverflow.com/questions/48001569/phpmyadmin-count-parameter-must-be-an-array-or-an-object-that-implements-co
-  patch:
-    src: files/patch/phpmyadmin.patch
-    dest: /usr/share/phpmyadmin/libraries/sql.lib.php
-
-- name: Fix bug https://medium.com/@chaloemphonthipkasorn/%E0%B9%81%E0%B8%81%E0%B9%89-bug-phpmyadmin-php7-2-ubuntu-16-04-92b287090b01
-  patch:
-    src: files/patch/phpmyadmin_array.patch
-    dest: /usr/share/phpmyadmin/libraries/plugin_interface.lib.php
-
-- name: Restart apache2
+- name: Restart apache
   service:
     name: apache2
     state: restarted

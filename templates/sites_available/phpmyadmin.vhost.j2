@@ -1,0 +1,31 @@
+<VirtualHost *:80>
+    ServerName {{ phpmyadmin_hostname }}
+    ServerAdmin webmaster@{{ phpmyadmin_hostname }}
+
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ phpmyadmin_hostname }}
+    ServerAdmin webmaster@{{ phpmyadmin_hostname }}
+
+    ErrorLog /var/log/apache2/{{ phpmyadmin_hostname }}_error.log
+    CustomLog /var/log/apache2/{{ phpmyadmin_hostname }}_access.log combined
+
+    <IfModule mod_headers.c>
+        Header set Content-Security-Policy "default-src 'self';"
+        Header set Content-Security-Policy "style-src 'self' 'unsafe-inline';"
+        Header always add Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+    </IfModule>
+
+    SSLEngine On
+    SSLCertificateFile /etc/apache2/certs/{{ phpmyadmin_hostname }}/fullchain.pem
+    SSLCertificateKeyFile /etc/apache2/certs/{{ phpmyadmin_hostname }}/privkey.pem
+
+    ProxyPreserveHost On
+    ProxyPass /.well-known !
+    ProxyPass "/" "http://127.0.0.1:1081/"
+    ProxyPassReverse "/" "http://127.0.0.1:1081/"
+</VirtualHost>

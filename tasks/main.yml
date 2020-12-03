@@ -128,6 +128,7 @@
       - "mail_admin_password: {{ mail_admin_password | default(mail_admin_password) }}"
       - "roundcube_admin_password: {{ roundcube_admin_password if roundcube is defined
                                       else roundcube_admin_password }}"
+      - "phpmyadmin_user_password: {{ phpmyadmin_user_password if phpmyadmin is defined }}"
       - "ispconfig_admin_password: {{ ispconfig_ispconfig_admin_password | default(ispconfig_admin_password) }}"
       - "ispconfig_mysql_root_password: {{ ispconfig_mysql_root_password | default(ispconfig_mysql_root_password) }}"
       - "ispconfig_mysql_ispconfig_password: {{ ispconfig_mysql_ispconfig_password
