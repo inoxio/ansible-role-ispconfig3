@@ -13,14 +13,15 @@
       services:
         phpmyadmin:
           image: phpmyadmin:latest
+          volumes:
+            - /var/run/mysqld:/var/run/mysqld:ro
           ports:
             - 1081:80
           environment:
             - "MYSQL_ROOT_PASSWORD={{ ispconfig_mysql_root_password | replace('$','$$') }}"
             - MYSQL_USER=phpmyadmin
             - "MYSQL_PASSWORD={{ phpmyadmin_user_password }}"
-            - "PMA_HOST={{ phpmyadmin_hostname }}"
-            - PMA_PORT=3306
+            - PMA_SOCKET=/var/run/mysqld/mysqld.sock
             - "PMA_ABSOLUTE_URI=https://{{ phpmyadmin_hostname }}"
           restart: always
     state: present
