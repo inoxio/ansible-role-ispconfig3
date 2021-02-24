@@ -3,6 +3,7 @@
 - name: Pull images
   docker_image:
     name: phpmyadmin:latest
+    source: pull
     force_source: yes
 
 - name: docker-compose via ansible docker_service
