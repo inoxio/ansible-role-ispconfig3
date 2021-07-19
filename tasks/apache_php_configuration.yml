@@ -55,25 +55,6 @@
       - php-soap
 
 # ----------------Configure apache----------------
-- name: Setup letsencrypt config
-  copy:
-    src: files/etc/apache2/conf-available/letsencrypt.conf
-    dest: /etc/apache2/conf-available/letsencrypt.conf
-    mode: 0644
-
-- name: Enable letsencrypt config
-  command: 'a2enconf letsencrypt'
-
-- name: Create letsencrypt wellknown-directory
-  command: mkdir --parents /var/www/letsencrypt
-  args:
-    creates: /var/www/letsencrypt
-
-- name: Make sure wellknown directory stays
-  command: touch /var/www/letsencrypt/.keep
-  args:
-    creates: /var/www/letsencrypt/.keep
-
 - name: Enable apache modules
   apache2_module:
     state: present
