@@ -26,29 +26,22 @@
 
 - name: Generate mail password
   set_fact:
-      mail_admin_password: "{{ mail_admin_password |
-                    default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
+    mail_admin_password: "{{ mail_admin_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
 
 - name: Generate roundcube password
   set_fact:
-      roundcube_admin_password: "{{ roundcube_admin_password |
-                    default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
+    roundcube_admin_password: "{{ roundcube_admin_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
 
 - name: Generate phpmyadmin_user password
   set_fact:
-      phpmyadmin_user_password: "{{ phpmyadmin_user_password |
-                      default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
+    phpmyadmin_user_password: "{{ phpmyadmin_user_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
 
 - name: Generate ISPConfig passwords
   set_fact:
-      ispconfig_admin_password: "{{ ispconfig_admin_password |
-                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
-      ispconfig_mysql_root_password: "{{ ispconfig_mysql_root_password |
-                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
-      ispconfig_mysql_ispconfig_password: "{{ ispconfig_mysql_ispconfig_password |
-                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
-      ispconfig_mysql_master_root_password: "{{ ispconfig_mysql_master_root_password |
-                              default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
+    ispconfig_admin_password: "{{ ispconfig_admin_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
+    ispconfig_mysql_root_password: "{{ ispconfig_mysql_root_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32') ) }}"
+    ispconfig_mysql_ispconfig_password: "{{ ispconfig_mysql_ispconfig_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
+    ispconfig_mysql_master_root_password: "{{ ispconfig_mysql_master_root_password | default( lookup('password', '/dev/null chars=ascii_letters,digits length=32')) }}"
 
 - name: Switch shell to bash
   file:
@@ -126,12 +119,9 @@
   debug:
     msg:
       - "mail_admin_password: {{ mail_admin_password | default(mail_admin_password) }}"
-      - "roundcube_admin_password: {{ roundcube_admin_password if roundcube is defined
-                                      else roundcube_admin_password }}"
+      - "roundcube_admin_password: {{ roundcube_admin_password if roundcube is defined else roundcube_admin_password }}"
       - "phpmyadmin_user_password: {{ phpmyadmin_user_password if phpmyadmin is defined }}"
       - "ispconfig_admin_password: {{ ispconfig_ispconfig_admin_password | default(ispconfig_admin_password) }}"
       - "ispconfig_mysql_root_password: {{ ispconfig_mysql_root_password | default(ispconfig_mysql_root_password) }}"
-      - "ispconfig_mysql_ispconfig_password: {{ ispconfig_mysql_ispconfig_password
-                                                | default(ispconfig_mysql_ispconfig_password) }}"
-      - "ispconfig_mysql_master_root_password: {{ ispconfig_mysql_master_root_password
-                                                  | default(ispconfig_mysql_master_root_password) }}"
+      - "ispconfig_mysql_ispconfig_password: {{ ispconfig_mysql_ispconfig_password | default(ispconfig_mysql_ispconfig_password) }}"
+      - "ispconfig_mysql_master_root_password: {{ ispconfig_mysql_master_root_password | default(ispconfig_mysql_master_root_password) }}"

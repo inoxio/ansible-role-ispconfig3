@@ -1,129 +1,113 @@
 ---
-- name: Set if the db should be configured with dbconfig-common
-  debconf:
-    name: roundcube-core
-    question: roundcube/dbconfig-install
-    value: true
-    vtype: boolean
 
-- name: Set roundcube database-type
-  debconf:
-    name: roundcube-core
-    question: roundcube/database-type
-    value: 'mysql'
-    vtype: multiselect
+- name: Write SQL configuration
+  copy:
+    src: files/etc/mysql/99-roundcube.cnf
+    dest: /etc/mysql/mariadb.conf.d/99-roundcube.cnf
 
-- name: Set roundcube mysql-admin-password
-  debconf:
-    name: roundcube-core
-    question: roundcube/mysql/admin-pass
-    value: '{{ ispconfig_mysql_root_password }}'
-    vtype: password
+- name: Restart mariadb
+  service:
+    name: mariadb
+    state: restarted
 
-- name: Set roundcube database-name
-  debconf:
-    name: roundcube-core
-    question: roundcube/db/dbname
-    value: 'roundcube'
-    vtype: string
+- name: Create roundcube directory
+  file:
+    path: /etc/roundcube
+    state: directory
 
-- name: Set roundcube mysql-app-password
-  debconf:
-    name: roundcube-core
-    question: roundcube/mysql/app-pass
-    value: '{{ roundcube_admin_password }}'
-    vtype: password
+- name: Copy managesieve config
+  template:
+    src: templates/roundcube/managesieve.php.j2
+    dest: /etc/roundcube/managesieve.php
 
-- name: Set roundcube database-app-password-confirm
-  debconf:
-    name: roundcube-core
-    question: roundcube/app-password-confirm
-    value: '{{ roundcube_admin_password }}'
-    vtype: password
+- name: Pull images
+  docker_image:
+    name: roundcube/roundcubemail:latest
+    source: pull
+    force_source: yes
 
-- name: Set roundcube host
-  debconf:
-    name: roundcube-core
-    question: roundcube/hosts
-    value: 'localhost'
-    vtype: string
+- name: docker-compose via ansible docker_service
+  docker_compose:
+    project_name: "roundcube"
+    definition:
+      version: "3"
+      services:
+        roundcube:
+          image: roundcube/roundcubemail:latest
+          volumes:
+            - /etc/roundcube/managesieve.php:/var/roundcube/config/managesieve.php
+          ports:
+            - 1082:80
+          environment:
+            - "ROUNDCUBEMAIL_DEFAULT_HOST=ssl://{{ roundcube_hostname }}"
+            - "ROUNDCUBEMAIL_SMTP_SERVER=tls://{{ roundcube_hostname }}"
+            - ROUNDCUBEMAIL_DEFAULT_PORT=993
+            - ROUNDCUBEMAIL_PLUGINS=managesieve,password,emoticons
+            - ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE=25M
+            - ROUNDCUBEMAIL_DB_TYPE=mysql
+            - ROUNDCUBEMAIL_DB_HOST={{ phpmyadmin_hostname }}
+            - ROUNDCUBEMAIL_DB_PORT=3306
+            - ROUNDCUBEMAIL_DB_USER=roundcube
+            - ROUNDCUBEMAIL_DB_PASSWORD=GJlSwqhUu1IkZQKivEPQL8w2
+            - ROUNDCUBEMAIL_DB_NAME=roundcube
+          restart: always
+    state: present
+    restarted: true
 
-- name: Set roundcube password
-  debconf:
-    name: roundcube-core
-    question: roundcube/pass
-    value: '{{ roundcube_admin_password }}'
-    vtype: password
+# apache2 setup
 
-- name: Confirm mysql password for roundcube
-  debconf:
-    name: roundcube-core
-    question: roundcube/mysql/app-pass-confirm
-    value: '{{ ispconfig_mysql_root_password }}'
-    vtype: password
+- name: Create directory for certificate
+  file:
+    path: "/etc/apache2/certs/{{ roundcube_hostname }}"
+    state: directory
 
-- name: Install required software for roundcube
+- name: Check if SSL certificate is present
+  stat:
+    path: "/etc/apache2/certs/{{ roundcube_hostname }}/fullchain.pem"
+  register: letsencrypt_cert
+
+- name: Generate temporary certificate
+  command: openssl req
+    -x509
+    -nodes
+    -days 30
+    -newkey rsa:2048
+    -keyout /etc/apache2/certs/"{{ roundcube_hostname }}"/privkey.pem
+    -out /etc/apache2/certs/"{{ roundcube_hostname }}"/fullchain.pem
+    -subj "/C=US/ST=DummyState/L=DummyTown/O=DummyCompany/OU=Software/CN=dummy-company.com"
+  when: not letsencrypt_cert.stat.exists
+
+- name: Change permission of temporary key
+  file:
+    path: "/etc/apache2/certs/{{ roundcube_hostname }}/privkey.pem"
+    mode: u=rw,g=,o=
+  when: not letsencrypt_cert.stat.exists
+
+- name: Copy apache vhost
+  template:
+    src: templates/sites_available/roundcube.vhost.j2
+    dest: /etc/apache2/sites-available/roundcube.vhost
+
+- name: Enable apache vhost
+  file:
+    src: /etc/apache2/sites-available/roundcube.vhost
+    dest: /etc/apache2/sites-enabled/roundcube.vhost
+    state: link
+
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted
+
+- name: Remove old APT based roundcube packages
   apt:
     name: "{{ packages }}"
-    state: present
-    update_cache: yes
+    autoremove: yes
+    purge: yes
+    state: absent
   vars:
     packages:
       - roundcube
       - roundcube-core
       - roundcube-mysql
       - roundcube-plugins
-      - javascript-common
-      - libjs-jquery-mousewheel
-      - php-net-sieve
-      - tinymce
-
-# ----------------Configure roundcube----------
-- name: Replace localhost entry in config.inc,php
-  replace:
-    path: /etc/roundcube/config.inc.php
-    regexp: "^config['default_host'] ="
-    replace: "config['default_host'] = 'localhost';"
-
-- name: Create directory for ssl certificate
-  file:
-    path: /etc/apache2/certs/{{ roundcube_hostname }}
-    state: directory
-
-- name: Check if SSL certificate was created already
-  stat:
-    path: /etc/apache2/certs/{{ roundcube_hostname }}/fullchain.pem
-  register: roundcube_cert
-
-- name: Generate temporary SSL certificate
-  command: openssl req
-    -x509
-    -nodes
-    -days 30
-    -newkey rsa:2048
-    -keyout /etc/apache2/certs/{{ roundcube_hostname }}/privkey.pem
-    -out /etc/apache2/certs/{{ roundcube_hostname }}/fullchain.pem
-    -subj "/C=US/ST=DummyState/L=DummyTown/O=DummyCompany/OU=Software/CN=dummy-company.com"
-  when: not roundcube_cert.stat.exists
-
-- name: Change permission of temporary SSL Key file
-  file:
-    path: /etc/apache2/certs/{{ roundcube_hostname }}/privkey.pem
-    mode: u=rw,g=,o=
-  when: not roundcube_cert.stat.exists
-
-- name: Copy roundcube apache vhost
-  template:
-    src: files/etc/apache2/sites-available/roundcube.vhost.j2
-    dest: /etc/apache2/sites-available/roundcube.vhost
-
-- name: Enable roundcube apache vhost
-  file:
-    src: /etc/apache2/sites-available/roundcube.vhost
-    dest: /etc/apache2/sites-enabled/roundcube.vhost
-    state: link
-
-- name: Restart apache2
-  service:
-    name: apache2
-    state: restarted
