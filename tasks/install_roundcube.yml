@@ -20,6 +20,12 @@
     src: templates/roundcube/managesieve.php.j2
     dest: /etc/roundcube/managesieve.php
 
+- name: Copy inoxio customizations
+  template:
+    src: templates/roundcube/customization.php.j2
+    dest: /etc/roundcube/customization.php
+  when: ispconfig_hostname == "config.inoxio.de"
+
 - name: Pull images
   docker_image:
     name: roundcube/roundcubemail:latest
@@ -35,7 +41,7 @@
         roundcube:
           image: roundcube/roundcubemail:latest
           volumes:
-            - /etc/roundcube/managesieve.php:/var/roundcube/config/managesieve.php
+            - /etc/roundcube:/var/roundcube/config
           ports:
             - 1082:80
           environment:
