@@ -54,7 +54,7 @@
             - ROUNDCUBEMAIL_DB_HOST={{ phpmyadmin_hostname }}
             - ROUNDCUBEMAIL_DB_PORT=3306
             - ROUNDCUBEMAIL_DB_USER=roundcube
-            - ROUNDCUBEMAIL_DB_PASSWORD=GJlSwqhUu1IkZQKivEPQL8w2
+            - "ROUNDCUBEMAIL_DB_PASSWORD={{ roundcube_db_password }}"
             - ROUNDCUBEMAIL_DB_NAME=roundcube
           restart: always
     state: present

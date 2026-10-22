@@ -46,6 +46,8 @@ automatically create a mailing list with the given Parameters.
 * `roundcube_admin_password`: (Optional) Password for Admin Login in Roundcube. If no password is set a password
     will be created and printed at the end of role execution.
 
+* `roundcube_db_password`: Password of the MySQL user `roundcube` that the Roundcube container uses.
+
 `ispconfig`: This contains the most configurations for your ISPConfig setup. 
 Please have a look at the example provided by ISPConfig itself. 
 You can find it [here](https://git.ISPConfig.org/ISPConfig/ISPConfig3/blob/master/docs/autoinstall_samples/autoinstall.ini.sample).
@@ -148,6 +150,7 @@ This shows an example how you could configure your playbook.
       mail_base_domain: your-company.com
       ispconfig_hostname: ispconfig.your-company.com
       roundcube_hostname: mail.your-company.de
+      roundcube_db_password: secret
      
 Everything else mentioned in role variables can be found in the defaults/main.yml.  
 All settings for the ISPConfig role are taken from the config file for the Apache2 setup.
