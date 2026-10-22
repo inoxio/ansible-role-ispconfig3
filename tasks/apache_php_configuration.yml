@@ -1,36 +1,6 @@
 ---
-- name: Add additional repositories
-  apt_repository:
-    repo: "{{ php_repository }}"
-
-- name: Install php versions
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
-      - php{{ item }}
-      - php{{ item }}-cgi
-      - php{{ item }}-cli
-      - php{{ item }}-common
-      - php{{ item }}-curl
-      - php{{ item }}-fpm
-      - php{{ item }}-gd
-      - php{{ item }}-imap
-      - php{{ item }}-intl
-      - php{{ item }}-mbstring
-      - php{{ item }}-mysql
-      - php{{ item }}-opcache
-      - php{{ item }}-pspell
-#      - php{{ item }}-recode
-      - php{{ item }}-soap
-      - php{{ item }}-sqlite3
-      - php{{ item }}-tidy
-      - php{{ item }}-xmlrpc
-      - php{{ item }}-xsl
-      - php{{ item }}-zip
-  loop: "{{ php_versions }}"
+# PHP is not installed from packages, it is built from source into /opt/php
+# (see php-build.sh in inoxio.ispconfig3_customization).
 
 - name: Install required software for Apache
   apt:
@@ -44,15 +14,8 @@
       - apache2-utils
       - imagemagick
       - libapache2-mod-fcgid
-      - libapache2-mod-php
       - mcrypt
       - memcached
-      - php-apcu
-      - php-gettext
-      - php-imagick
-      - php-memcache
-      - php-pear
-      - php-soap
 
 # ----------------Configure apache----------------
 - name: Enable apache modules
